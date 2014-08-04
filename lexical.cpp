@@ -8,7 +8,7 @@ using namespace std;
 
 int getSymbol(char c);
 bool isFinalState(int num);
-string printToken(int token, string value);
+string printToken(int token, string value, string value1);
 
 int matrix[15][19] = {
     //-   +   =   /   ;   ,   {   }   *  (   )   :  <  > 0-9 a-z err ' '  \n
@@ -32,7 +32,7 @@ int matrix[15][19] = {
 int main(int argc, char **argv) {
     if (argc != 3) {
         cerr << "Uso: lexico [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
-        exit(1);
+        return(1);
     }
 
     int lastState = 0, currentState = 1, column = 0, line = 1;
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
                 value.erase(value.begin() + (value.size() - 1));
                 output << "Palavra: " << value << endl;
                 output << "Erro na linha: " << line << " coluna: " << column << endl;
-                exit(1);
+                return(1);
             }
 
             if (lastState == 12) readingComments = false;
@@ -96,9 +96,7 @@ int main(int argc, char **argv) {
             if (!readingComments) {
                 value.erase(value.begin() + (value.size() - 1));
                 valuel.erase(valuel.begin() + (valuel.size() - 1));
-                output << printToken(lastState, valuel);
-                output << " => ";
-                output << value << endl;
+                output << printToken(lastState, valuel, value) << endl;
 
                 if (lastState == 10) readingComments = true;
             }
@@ -144,7 +142,7 @@ bool isFinalState(int num) {
     else return false;
 }
 
-string printToken(int token, string value){
+string printToken(int token, string value, string value1){
     vector<string> symbols;
     symbols.push_back("program");
     symbols.push_back("label");
@@ -171,7 +169,51 @@ string printToken(int token, string value){
         case 2:
         for (std::vector<string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
             if ((*it).compare(value) == 0)
-                return ("SIMBOLO COMPOSTO EM NEGRITO");
+            {
+                if(value1 == "program")
+                    return ("PROGRAM");
+                else if(value1 == "label")
+                    return ("LABEL");
+                else if(value1 == "type")
+                    return ("TYPE");
+                else if(value1 == "array")
+                    return ("ARRAY");
+                else if(value1 == "of")
+                    return ("OF");
+                else if(value1 == "var")
+                    return ("VAR");
+                else if(value1 == "integer")
+                    return ("INTEGER");
+                else if(value1 == "procedure")
+                    return ("PROCEDURE");
+                else if(value1 == "function")
+                    return ("FUNCTION");
+                else if(value1 == "begin")
+                    return ("BEGIN");
+                else if(value1 == "end")
+                    return ("END");
+                else if(value1 == "if")
+                    return ("IF");
+                else if(value1 == "then")
+                    return ("THEN");
+                else if(value1 == "else")
+                    return ("ELSE");
+                else if(value1 == "while")
+                    return ("WHILE");
+                else if(value1 == "do")
+                    return ("DO");
+                else if(value1 == "or")
+                    return ("OR");
+                else if(value1 == "and")
+                    return ("AND");
+                else if(value1 == "div")
+                    return ("DIV");
+                else if(value1 == "not")
+                    return ("NOT");
+                else
+                    return ("PALAVRA RESERVADA NAO IDENTIFICADA");
+
+            }
         }
         return ("IDENTIFICADOR");
         break;
@@ -183,15 +225,61 @@ string printToken(int token, string value){
         case 9:
         case 11:
         case 13:
-        return ("SIMBOLO ESPECIAL");
-        break;
+            if(value1 == "(")
+                return ("APARENTESE");
+            else if(value1 == ")")
+                return ("FPARENTESE");
+            else if(value1 == ";")
+                return ("PONTOVIRGULA");
+            else if(value1 == ":")
+                return ("DOISPONTOS");
+            else if(value1 == "+")
+                return ("ADICAO");
+            else if(value1 == "-")
+                return ("SUBTRACAO");
+            else if(value1 == "/")
+                return ("BARRA");
+            else if(value1 == "{")
+                return ("ACOLCHETES");
+            else if(value1 == "}")
+                return ("FCOLCHETES");
+            else if(value1 == ".")
+                return ("PONTO");
+            else if(value1 == ",")
+                return ("VIRGULA");
+            else if(value1 == ">")
+                return ("MAIOR");
+            else if(value1 == "<")
+                return ("MENOR");
+            else if(value1 == "*")
+                return ("ASTERISCO");
+            else if(value1 == "=")
+                return ("IGUAL");
+            else
+                return (" SIMBOLO SIMPLES NAO IDENTIFICADO");
+            break;
         case 5:
         case 7:
         case 8:
         case 10:
         case 12:
-        return ("SIMBOLO COMPOSTO");
-        break;
+            if(value1 == ">=")
+                return ("MAIORIGUAL");
+            else if(value1 == "<=")
+                return ("MENORIGUAL");
+            else if(value1 == ":=")
+                return ("DOISPONTOSIGUAL");
+            else if(value1 == "<>")
+                return ("MENORMAIOR");
+            else if(value1 == "(*")
+                return ("APARENTESEASTERISCO");
+            else if(value1 == "*)")
+                return ("ASTERISCOFPARENTESE");
+            else if(value1 == "..")
+                return ("PONTOPONTO");
+            else
+                return ("SIMBOLO COMPOSTO NAO IDENTIFICADO");
+            break;
     }
 
     return "";
