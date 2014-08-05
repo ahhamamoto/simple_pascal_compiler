@@ -8,7 +8,7 @@ using namespace std;
 
 int getSymbol(char c);
 bool isFinalState(int num);
-string printToken(int token, string value, string value1);
+int printToken(int token, string value, string value1);
 
 int matrix[15][19] = {
     //-   +   =   /   ;   ,   {   }   *  (   )   :  <  > 0-9 a-z err ' '  \n
@@ -122,8 +122,8 @@ int getSymbol(char c) {
     else if (c == '/') return 3;
     else if (c == ';') return 4;
     else if (c == ',') return 5;
-    else if (c == '{') return 6;
-    else if (c == '}') return 7;
+    else if (c == '[') return 6;
+    else if (c == ']') return 7;
     else if (c == '*') return 8;
     else if (c == '(') return 9;
     else if (c == ')') return 10;
@@ -142,7 +142,7 @@ bool isFinalState(int num) {
     else return false;
 }
 
-string printToken(int token, string value, string value1){
+int printToken(int token, string value, string value1){
     vector<string> symbols;
     symbols.push_back("program");
     symbols.push_back("label");
@@ -171,54 +171,54 @@ string printToken(int token, string value, string value1){
             if ((*it).compare(value) == 0)
             {
                 if(value1 == "program")
-                    return ("PROGRAM");
+                    return 1;
                 else if(value1 == "label")
-                    return ("LABEL");
+                    return 2;
                 else if(value1 == "type")
-                    return ("TYPE");
+                    return 3;
                 else if(value1 == "array")
-                    return ("ARRAY");
+                    return 27;
                 else if(value1 == "of")
-                    return ("OF");
+                    return 32;
                 else if(value1 == "var")
-                    return ("VAR");
+                    return 4;
                 else if(value1 == "integer")
-                    return ("INTEGER");
+                    return 3;
                 else if(value1 == "procedure")
-                    return ("PROCEDURE");
+                    return 5;
                 else if(value1 == "function")
-                    return ("FUNCTION");
+                    return 6;
                 else if(value1 == "begin")
-                    return ("BEGIN");
+                    return 7;
                 else if(value1 == "end")
-                    return ("END");
+                    return 31;
                 else if(value1 == "if")
-                    return ("IF");
+                    return 29;
                 else if(value1 == "then")
-                    return ("THEN");
+                    return 30;
                 else if(value1 == "else")
-                    return ("ELSE");
+                    return 20;
                 else if(value1 == "while")
-                    return ("WHILE");
+                    return 8;
                 else if(value1 == "do")
-                    return ("DO");
+                    return 34;
                 else if(value1 == "or")
-                    return ("OR");
+                    return 42;
                 else if(value1 == "and")
-                    return ("AND");
+                    return 22;
                 else if(value1 == "div")
-                    return ("DIV");
+                    return 21;
                 else if(value1 == "not")
-                    return ("NOT");
+                    return 9;
                 else
-                    return ("PALAVRA RESERVADA NAO IDENTIFICADA");
+                    return 0;
 
             }
         }
-        return ("IDENTIFICADOR");
+        return 25;
         break;
         case 3:
-        return ("NUMERO");
+        return 26;
         break;
         case 4:
         case 6:
@@ -226,37 +226,37 @@ string printToken(int token, string value, string value1){
         case 11:
         case 13:
             if(value1 == "(")
-                return ("APARENTESE");
+                return 10;
             else if(value1 == ")")
-                return ("FPARENTESE");
+                return 11;
             else if(value1 == ";")
-                return ("PONTOVIRGULA");
+                return 12;
             else if(value1 == ":")
-                return ("DOISPONTOS");
+                return 16;
             else if(value1 == "+")
-                return ("ADICAO");
+                return 40;
             else if(value1 == "-")
-                return ("SUBTRACAO");
+                return 41;
             else if(value1 == "/")
-                return ("BARRA");
-            else if(value1 == "{")
-                return ("ACOLCHETES");
-            else if(value1 == "}")
-                return ("FCOLCHETES");
+                return 21;
+            else if(value1 == "[")
+                return 17;
+            else if(value1 == "]")
+                return 18;
             else if(value1 == ".")
-                return ("PONTO");
+                return 13;
             else if(value1 == ",")
-                return ("VIRGULA");
+                return 14;
             else if(value1 == ">")
-                return ("MAIOR");
+                return 39;
             else if(value1 == "<")
-                return ("MENOR");
+                return 36;
             else if(value1 == "*")
-                return ("ASTERISCO");
+                return 23;
             else if(value1 == "=")
-                return ("IGUAL");
+                return 15;
             else
-                return (" SIMBOLO SIMPLES NAO IDENTIFICADO");
+                return 0;
             break;
         case 5:
         case 7:
@@ -264,19 +264,19 @@ string printToken(int token, string value, string value1){
         case 10:
         case 12:
             if(value1 == ">=")
-                return ("MAIORIGUAL");
+                return 38;
             else if(value1 == "<=")
-                return ("MENORIGUAL");
+                return 37;
             else if(value1 == ":=")
-                return ("DOISPONTOSIGUAL");
+                return 33;
             else if(value1 == "<>")
-                return ("MENORMAIOR");
+                return 35;
             else if(value1 == "(*")
-                return ("APARENTESEASTERISCO");
+                return 0; 
             else if(value1 == "*)")
-                return ("ASTERISCOFPARENTESE");
+                return 0;
             else if(value1 == "..")
-                return ("PONTOPONTO");
+                return 19;
             else
                 return ("SIMBOLO COMPOSTO NAO IDENTIFICADO");
             break;
