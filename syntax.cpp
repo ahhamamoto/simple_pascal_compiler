@@ -52,8 +52,8 @@ using namespace std;
 // static const int identifier = 25, number = 26, array = 27, _procedure = 28, _if = 29, _then = 30;
 // static const int _end = 31, OF = 32, attrib = 33, _do = 34, _lesserGREATER = 35, _lesser = 36, _lessEQUAL = 37;
 // static const int _greatEQUAL = 38, _greater = 39, _plus = 40, _minus = 41, _or = 42;
-string PrintToken[] = {"PROGRAM", "LABEL", "TYPE", "ARRAY", "OF", "VAR", "PROCEDURE", "FUNCTION", "BEGIN","END", "IF", "THEN", "ELSE",
-"WHILE", "DO", "OR", "AND", "DIV", "NOT", "IDENTIFIER", "NUMVER", "(", ")", ";", ":", "+", "-", "/", "[", "]", ",",
+string PrintToken[] = {"zero", "PROGRAM", "LABEL", "TYPE", "ARRAY", "OF", "VAR", "PROCEDURE", "FUNCTION", "BEGIN","END", "IF", "THEN", "ELSE",
+"WHILE", "DO", "OR", "AND", "DIV", "NOT", "IDENTIFIER", "NUMBER", "(", ")", ";", ":", "+", "-", "/", "[", "]", ",",
 ">", "<", "*", "=", ">=", "<=", ":=", "<>"};
 
 
@@ -71,6 +71,7 @@ int getToken() {
 }
 
 bool eat(int token) {
+    cout << "Eating: " << PrintToken[current_token] << "(" << current_token << ")" << endl;
     if (token == current_token) {
         current_token = getToken();
         return true;
@@ -86,88 +87,78 @@ void PROGRAMA() {
         case PROGRAM:
             eat(PROGRAM);
             eat(IDENTIFIER);
-            if(current_token == APARENTESES){
-                eat(APARENTESES);
-                eat(IDENTIFIER);
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
-                eat(FPARENTESES);
-            }
             eat(PONTOVIRGULA);
             BLOCO();
             break;
         default:
-            cout << "expected 'program...'\n";
+            cout << "expected program... PROGRAMA";
     }
 }
 
 void BLOCO() {
-    if (current_token == LABEL) {
-        eat(LABEL);
-        eat(NUMBER);
-        while ( current_token == VIRGULA ) {
-            eat(VIRGULA);
+
+    switch (current_token){
+        case LABEL:
+            eat(LABEL);
             eat(NUMBER);
+            while(current_token == VIRGULA) {
+                eat(VIRGULA);
+                eat(NUMBER);
+            }
+            eat(PONTOVIRGULA);
+            break;
+        case TYPE:
+            eat(TYPE);
+            while(current_token == IDENTIFIER) {
+                eat(IDENTIFIER);
+                eat(IGUAL);
+                TIPO();
+                eat(PONTOVIRGULA);
+            }
+            break;
+        case VAR:
+            eat(VAR);
+            while(current_token == IDENTIFIER) {
+                eat(IDENTIFIER);
+                while(current_token == VIRGULA){
+                    eat(VIRGULA);
+                    eat(IDENTIFIER);
+                }
+                eat(DOISPONTOS);
+                TIPO();
+                eat(PONTOVIRGULA);
+            }
+            break;
+        default:
+            cout << "expected program BLOCO" << endl;
+            break;
+    }
+
+    while(current_token == PROCEDURE || current_token == FUNCTION) {
+        if(current_token == PROCEDURE) {
+            eat(PROCEDURE);
+            eat(IDENTIFIER);
+            PARAM_FORMAIS();
         }
+        else if(current_token == FUNCTION) {
+            eat(FUNCTION);
+            eat(IDENTIFIER);
+            PARAM_FORMAIS();
+            eat(DOISPONTOS);
+            eat(IDENTIFIER);
+        }
+        else
+            cout << "expected prgram BLOCO 2" << endl;
+
+        eat(PONTOVIRGULA);
+        BLOCO();
         eat(PONTOVIRGULA);
     }
 
-    if (current_token == TYPE) {
-        eat(TYPE);
-        while(current_token == IDENTIFIER){
-            eat(IDENTIFIER);
-            eat(IGUAL);
-            TIPO();
-            eat(PONTOVIRGULA);
-        }
-    }
-
-    if (current_token == VAR) {
-        eat(VAR);
-        while(current_token == IDENTIFIER){
-            eat(IDENTIFIER);
-            while (current_token == VIRGULA) {
-                eat(VIRGULA);
-                eat(IDENTIFIER);
-            }
-            eat(DOISPONTOS);
-            TIPO();
-            eat(PONTOVIRGULA);
-        }
-    }
-
-    if (current_token == PROCEDURE || current_token == FUNCTION) {
-        while (current_token == PROCEDURE || current_token == FUNCTION){
-            if (current_token == PROCEDURE) {
-                eat(PROCEDURE);
-                eat(IDENTIFIER);
-                if(current_token != PONTOVIRGULA)
-                    PARAM_FORMAIS();
-            } else if (current_token == FUNCTION) {
-                eat(FUNCTION);
-                eat(IDENTIFIER);
-                if (current_token == DOISPONTOS)
-                    eat(DOISPONTOS);
-                else{
-                    PARAM_FORMAIS();
-                    eat(DOISPONTOS);
-                }
-                
-                eat(IDENTIFIER);
-            }
-
-            eat(PONTOVIRGULA);
-            BLOCO();
-            eat(PONTOVIRGULA);
-        }
-    }
-
-    if (current_token == BEGIN) {
+    if(current_token == BEGIN) {
         eat(BEGIN);
         COMANDO();
-        while (current_token == PONTOVIRGULA) {
+        while(current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             COMANDO();
         }
@@ -181,21 +172,14 @@ void TIPO() {
 
 void PARAM_FORMAIS() {
     eat(APARENTESES);
-    do{
-        switch (current_token) {
+    while(current_token == VAR || current_token == IDENTIFIER || current_token == FUNCTION || current_token == PROCEDURE) {
+        switch(current_token) {
             case VAR:
                 eat(VAR);
-                eat(IDENTIFIER);
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
-                eat(DOISPONTOS);
-                eat(IDENTIFIER);
                 break;
             case IDENTIFIER:
                 eat(IDENTIFIER);
-                while (current_token == VIRGULA ) {
+                while(current_token == VIRGULA) {
                     eat(VIRGULA);
                     eat(IDENTIFIER);
                 }
@@ -205,31 +189,23 @@ void PARAM_FORMAIS() {
             case FUNCTION:
                 eat(FUNCTION);
                 eat(IDENTIFIER);
-                while (current_token == VIRGULA ) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
+                PARAM_FORMAIS();
                 eat(DOISPONTOS);
                 eat(IDENTIFIER);
                 break;
             case PROCEDURE:
                 eat(PROCEDURE);
                 eat(IDENTIFIER);
-                while (current_token == VIRGULA ) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
+                PARAM_FORMAIS();
                 break;
             default:
-                cout << "expected 'program...'\n";
-            }
-
-            if(current_token == VIRGULA)
-                eat(VIRGULA);
-
-        } while(current_token == VAR || current_token == IDENTIFIER || current_token == FUNCTION || current_token == PROCEDURE);
-
-    eat(FPARENTESES);
+                cout << "FUDEUUUU";
+                break;
+        }
+        if(current_token == PONTOVIRGULA)
+            eat(PONTOVIRGULA);
+    }
+    eat(FPARENTESES);    
 }
 
 void COMANDO () {
@@ -241,47 +217,42 @@ void COMANDO () {
 }
 
 void COM_SEM_ROTULO() {
-    switch (current_token) {
+    switch(current_token){
         case IDENTIFIER:
             eat(IDENTIFIER);
             if(current_token == ATRIBUICAO) {
                 eat(ATRIBUICAO);
                 EXPRESSAO();
-            }
-            else if(current_token == ACOLCHETES) {
-                eat(ACOLCHETES);
-                EXPRESSAO();
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    EXPRESSAO();
-                }
-                eat(FCOLCHETES);
-            }
-            else if(current_token == APARENTESES) {
+            }else if(current_token == APARENTESES) {
                 eat(APARENTESES);
-                EXPRESSAO();
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    EXPRESSAO();
+                if(current_token ==  FPARENTESES) {
+                    eat(FPARENTESES);
                 }
-                eat(FPARENTESES);
+                else {
+                    EXPRESSAO();
+                    while(current_token == VIRGULA) {
+                        eat(VIRGULA);
+                        EXPRESSAO();
+                    }
+                    eat(FPARENTESES);
+                }
             }
             break;
         case BEGIN:
             eat(BEGIN);
-            COMANDO();
-            if (current_token == PONTOVIRGULA) {
+            COM_SEM_ROTULO();
+            while(current_token == PONTOVIRGULA) {
                 eat(PONTOVIRGULA);
-                COMANDO();
+                COM_SEM_ROTULO();
             }
             eat(END);
             break;
         case IF:
-            eat (IF);
+            eat(IF);
             EXPRESSAO();
             eat(THEN);
             COM_SEM_ROTULO();
-            if (current_token == ELSE) {
+            if(current_token == ELSE) {
                 eat(ELSE);
                 COM_SEM_ROTULO();
             }
@@ -293,7 +264,7 @@ void COM_SEM_ROTULO() {
             COM_SEM_ROTULO();
             break;
         default:
-            cout << "expected...";
+            break;
     }
 }
 
@@ -322,6 +293,9 @@ void EXPRESSAO() {
             break;
         case MAIOR:
             eat(MAIOR);
+            EXP_SIMPLES();
+            break;
+        default:
             break;
     }
 }
@@ -331,7 +305,9 @@ void EXP_SIMPLES() {
         eat(MAIS);
     else if(current_token == MENOS)
         eat(MENOS);
+
     TERMO();
+
     while (current_token == MAIS || current_token == MENOS || current_token == OR) {
         switch (current_token) {
             case MAIS:
@@ -370,23 +346,20 @@ void FATOR() {
     switch (current_token) {
         case IDENTIFIER:
             eat(IDENTIFIER);
-            if(current_token == ACOLCHETES) {
-                eat(ACOLCHETES);
-                EXPRESSAO();
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    EXPRESSAO();
-                }
-                eat(FCOLCHETES);
-            }
-            else if(current_token == APARENTESES) {
+            if(current_token == APARENTESES) {
                 eat(APARENTESES);
-                EXPRESSAO();
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    EXPRESSAO();
+                if(current_token ==  FPARENTESES) {
+                    eat(FPARENTESES);
                 }
-                eat(FPARENTESES);
+                else {
+                    EXPRESSAO();
+                    while(current_token == VIRGULA) {
+                        eat(VIRGULA);
+                        EXPRESSAO();
+                    }
+                    eat(FPARENTESES);
+                }
+
             }
             break;
         case NUMBER:
@@ -401,7 +374,10 @@ void FATOR() {
             eat(NOT);
             FATOR();
             break;
-        }
+        default:
+            cout << "FUDEUUUUUUU";
+            break;
+    }
 }
 
 int main () {
