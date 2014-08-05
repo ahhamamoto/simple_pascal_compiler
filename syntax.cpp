@@ -53,8 +53,8 @@ using namespace std;
 // static const int _end = 31, OF = 32, attrib = 33, _do = 34, _lesserGREATER = 35, _lesser = 36, _lessEQUAL = 37;
 // static const int _greatEQUAL = 38, _greater = 39, _plus = 40, _minus = 41, _or = 42;
 string PrintToken[] = {"zero", "PROGRAM", "LABEL", "TYPE", "ARRAY", "OF", "VAR", "PROCEDURE", "FUNCTION", "BEGIN","END", "IF", "THEN", "ELSE",
-"WHILE", "DO", "OR", "AND", "DIV", "NOT", "IDENTIFIER", "NUMBER", "(", ")", ";", ":", "+", "-", "/", "[", "]", ",",
-">", "<", "*", "=", ">=", "<=", ":=", "<>"};
+                       "WHILE", "DO", "OR", "AND", "DIV", "NOT", "IDENTIFIER", "NUMBER", "(", ")", ";", ":", "+", "-", "/", "[", "]", ",",
+                       ">", "<", "*", "=", ">=", "<=", ":=", "<>"};
 
 
 int current_token;
@@ -205,7 +205,7 @@ void PARAM_FORMAIS() {
         if(current_token == PONTOVIRGULA)
             eat(PONTOVIRGULA);
     }
-    eat(FPARENTESES);    
+    eat(FPARENTESES);
 }
 
 void COMANDO () {
@@ -375,14 +375,19 @@ void FATOR() {
             FATOR();
             break;
         default:
-            cout << "FUDEUUUUUUU";
+            cout << "opopopoplop" << endl;
             break;
     }
 }
 
-int main () {
-    file.open("outputlexic.txt", fstream::in);
-    output.open("outputsyntax.txt", fstream::out);
+int main (int argc, char **argv) {
+    if (argc != 3) {
+        cerr << "Uso: lexico [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
+        return(1);
+    }
+    file.open(argv[1], fstream::in);
+    output.open(argv[2], fstream::out);
+
     if (!file.is_open()) {
         cout << "file not open (entrada)";
         return 0;
