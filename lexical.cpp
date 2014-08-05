@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
             if (!readingComments) {
                 value.erase(value.begin() + (value.size() - 1));
                 valuel.erase(valuel.begin() + (valuel.size() - 1));
-                output << printToken(lastState, valuel, value) << endl;
+                output << printToken(lastState, valuel, value) << " ";
 
                 if (lastState == 10) readingComments = true;
             }
@@ -170,45 +170,45 @@ int printToken(int token, string value, string value1){
         for (std::vector<string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
             if ((*it).compare(value) == 0)
             {
-                if(value1 == "program")
+                if(value1 == "program" || value1 == "PROGRAM")
                     return 1;
-                else if(value1 == "label")
+                else if(value1 == "label" || value1 == "LABEL")
                     return 2;
-                else if(value1 == "type")
+                else if(value1 == "type" || value1 == "TYPE")
                     return 3;
-                else if(value1 == "array")
+                else if(value1 == "array" || value1 == "ARRAY")
                     return 27;
-                else if(value1 == "of")
+                else if(value1 == "of" || value1 == "OF")
                     return 32;
-                else if(value1 == "var")
+                else if(value1 == "var" || value1 == "VAR")
                     return 4;
-                else if(value1 == "integer")
-                    return 3;
-                else if(value1 == "procedure")
+                else if(value1 == "integer" || value1 == "INTEGER")
+                    return 25;
+                else if(value1 == "procedure" || value1 == "PROCEDURE")
                     return 5;
-                else if(value1 == "function")
+                else if(value1 == "function" || value1 == "FUNCTION")
                     return 6;
-                else if(value1 == "begin")
+                else if(value1 == "begin" || value1 == "BEGIN")
                     return 7;
-                else if(value1 == "end")
+                else if(value1 == "end" || value1 == "END")
                     return 31;
-                else if(value1 == "if")
+                else if(value1 == "if" || value1 == "IF")
                     return 29;
-                else if(value1 == "then")
+                else if(value1 == "then"|| value1 == "THEN")
                     return 30;
-                else if(value1 == "else")
+                else if(value1 == "else" || value1 == "ELSE")
                     return 20;
-                else if(value1 == "while")
+                else if(value1 == "while" || value1 == "WHILE")
                     return 8;
-                else if(value1 == "do")
+                else if(value1 == "do" || value1 == "DO")
                     return 34;
-                else if(value1 == "or")
+                else if(value1 == "or" || value1 == "OR")
                     return 42;
-                else if(value1 == "and")
+                else if(value1 == "and" || value1 == "AND")
                     return 22;
-                else if(value1 == "div")
+                else if(value1 == "div" || value1 == "DIV")
                     return 21;
-                else if(value1 == "not")
+                else if(value1 == "not" || value1 == "NOT")
                     return 9;
                 else
                     return 0;
@@ -278,9 +278,9 @@ int printToken(int token, string value, string value1){
             else if(value1 == "..")
                 return 19;
             else
-                return ("SIMBOLO COMPOSTO NAO IDENTIFICADO");
+                return 0;
             break;
     }
 
-    return "";
+    return 0;
 }
