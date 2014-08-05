@@ -43,6 +43,7 @@ using namespace std;
 #define MENORIGUAL 37
 #define ATRIBUICAO 38
 #define MENORMAIOR 39
+#define PONTO 40
 
 // static const int program = 1, label = 2, type = 3, var = 4, procedure = 5, _function = 6, _begin = 7;
 // static const int _while = 8, _not = 9;
@@ -54,7 +55,7 @@ using namespace std;
 // static const int _greatEQUAL = 38, _greater = 39, _plus = 40, _minus = 41, _or = 42;
 string PrintToken[] = {"zero", "PROGRAM", "LABEL", "TYPE", "ARRAY", "OF", "VAR", "PROCEDURE", "FUNCTION", "BEGIN","END", "IF", "THEN", "ELSE",
                        "WHILE", "DO", "OR", "AND", "DIV", "NOT", "IDENTIFIER", "NUMBER", "(", ")", ";", ":", "+", "-", "/", "[", "]", ",",
-                       ">", "<", "*", "=", ">=", "<=", ":=", "<>"};
+                       ">", "<", "*", "=", ">=", "<=", ":=", "<>", "."};
 
 
 int current_token;
@@ -71,7 +72,7 @@ int getToken() {
 }
 
 bool eat(int token) {
-    cout << "Eating: " << PrintToken[current_token] << "(" << current_token << ")" << endl;
+    cout << "Eating: [" << PrintToken[current_token] << "] (" << current_token << ")" << endl;
     if (token == current_token) {
         current_token = getToken();
         return true;
@@ -89,6 +90,7 @@ void PROGRAMA() {
             eat(IDENTIFIER);
             eat(PONTOVIRGULA);
             BLOCO();
+            eat(PONTO);
             break;
         default:
             cout << "expected program... PROGRAMA";
