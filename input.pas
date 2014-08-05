@@ -1,15 +1,17 @@
+program exercicio;
 var t: integer;
-function g(n, r: integer; var k : integer): integer;
+function g(n, r : integer; var k : integer): integer;
+var t: integer;
 function f(i: integer): integer;
-var s, t: integer;
+var s,t: integer;
 begin
 s:=i*i;
-if r<s
+if r<=s
 then begin k:=k+1; f:=0 end
 else begin f:=g(n-1, r-s, t) + f(i+1);
 k:=k+t
 end
-end ;
+end
 begin
 if n=0
 then begin k:=1; g:=1 end
@@ -20,5 +22,5 @@ k:=k+t
 end
 end
 begin
-write(a)
+write( g(2,5,t), t)
 end

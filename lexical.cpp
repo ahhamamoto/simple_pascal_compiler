@@ -8,7 +8,7 @@ using namespace std;
 
 int getSymbol(char c);
 bool isFinalState(int num);
-int printToken(int token, string value, string value1);
+string printToken(int token, string value, string value1);
 
 int matrix[15][19] = {
     //-   +   =   /   ;   ,   {   }   *  (   )   :  <  > 0-9 a-z err ' '  \n
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
             if (!readingComments) {
                 value.erase(value.begin() + (value.size() - 1));
                 valuel.erase(valuel.begin() + (valuel.size() - 1));
-                output << printToken(lastState, valuel, value) << " ";
+                output << printToken(lastState, valuel, value) << endl;
 
                 if (lastState == 10) readingComments = true;
             }
@@ -142,7 +142,7 @@ bool isFinalState(int num) {
     else return false;
 }
 
-int printToken(int token, string value, string value1){
+string printToken(int token, string value, string value1){
     vector<string> symbols;
     symbols.push_back("program");
     symbols.push_back("label");
@@ -150,7 +150,6 @@ int printToken(int token, string value, string value1){
     symbols.push_back("array");
     symbols.push_back("of");
     symbols.push_back("var");
-    symbols.push_back("integer");
     symbols.push_back("procedure");
     symbols.push_back("function");
     symbols.push_back("begin");
@@ -171,54 +170,52 @@ int printToken(int token, string value, string value1){
             if ((*it).compare(value) == 0)
             {
                 if(value1 == "program" || value1 == "PROGRAM")
-                    return 1;
+                    return "PROGRAM";
                 else if(value1 == "label" || value1 == "LABEL")
-                    return 2;
+                    return "LABEL";
                 else if(value1 == "type" || value1 == "TYPE")
-                    return 3;
+                    return "TYPE";
                 else if(value1 == "array" || value1 == "ARRAY")
-                    return 27;
+                    return "ARRAY";
                 else if(value1 == "of" || value1 == "OF")
-                    return 32;
+                    return "OF";
                 else if(value1 == "var" || value1 == "VAR")
-                    return 4;
-                else if(value1 == "integer" || value1 == "INTEGER")
-                    return 25;
+                    return "VAR";
                 else if(value1 == "procedure" || value1 == "PROCEDURE")
-                    return 5;
+                    return "PROCEDURE";
                 else if(value1 == "function" || value1 == "FUNCTION")
-                    return 6;
+                    return "FUNCTION";
                 else if(value1 == "begin" || value1 == "BEGIN")
-                    return 7;
+                    return "BEGIN";
                 else if(value1 == "end" || value1 == "END")
-                    return 31;
+                    return "END";
                 else if(value1 == "if" || value1 == "IF")
-                    return 29;
+                    return "IF";
                 else if(value1 == "then"|| value1 == "THEN")
-                    return 30;
+                    return "THEN";
                 else if(value1 == "else" || value1 == "ELSE")
-                    return 20;
+                    return "ELSE";
                 else if(value1 == "while" || value1 == "WHILE")
-                    return 8;
+                    return "WHILE";
                 else if(value1 == "do" || value1 == "DO")
-                    return 34;
+                    return "DO";
                 else if(value1 == "or" || value1 == "OR")
-                    return 42;
+                    return "OR";
                 else if(value1 == "and" || value1 == "AND")
-                    return 22;
+                    return "AND";
                 else if(value1 == "div" || value1 == "DIV")
-                    return 21;
+                    return "DIV";
                 else if(value1 == "not" || value1 == "NOT")
-                    return 9;
+                    return "NOT";
                 else
-                    return 0;
+                    return "ERROR";
 
             }
         }
-        return 25;
+        return "IDENTIFIER";
         break;
         case 3:
-        return 26;
+        return "NUMBER";
         break;
         case 4:
         case 6:
@@ -226,37 +223,37 @@ int printToken(int token, string value, string value1){
         case 11:
         case 13:
             if(value1 == "(")
-                return 10;
+                return "(";
             else if(value1 == ")")
-                return 11;
+                return ")";
             else if(value1 == ";")
-                return 12;
+                return ";";
             else if(value1 == ":")
-                return 16;
+                return ":";
             else if(value1 == "+")
-                return 40;
+                return "+";
             else if(value1 == "-")
-                return 41;
+                return "-";
             else if(value1 == "/")
-                return 21;
+                return "/";
             else if(value1 == "[")
-                return 17;
+                return "[";
             else if(value1 == "]")
-                return 18;
+                return "]";
             else if(value1 == ".")
-                return 13;
+                return ".";
             else if(value1 == ",")
-                return 14;
+                return ",";
             else if(value1 == ">")
-                return 39;
+                return ">";
             else if(value1 == "<")
-                return 36;
+                return "<";
             else if(value1 == "*")
-                return 23;
+                return "*";
             else if(value1 == "=")
-                return 15;
+                return "=";
             else
-                return 0;
+                return "ERROR";
             break;
         case 5:
         case 7:
@@ -264,23 +261,23 @@ int printToken(int token, string value, string value1){
         case 10:
         case 12:
             if(value1 == ">=")
-                return 38;
+                return ">=";
             else if(value1 == "<=")
-                return 37;
+                return "<=";
             else if(value1 == ":=")
-                return 33;
+                return ":=";
             else if(value1 == "<>")
-                return 35;
+                return "<>";
             else if(value1 == "(*")
-                return 0; 
+                return "(*"; 
             else if(value1 == "*)")
-                return 0;
+                return "*)";
             else if(value1 == "..")
-                return 19;
+                return "..";
             else
-                return 0;
+                return "ERROR";
             break;
     }
 
-    return 0;
+    return "ERROR";
 }
