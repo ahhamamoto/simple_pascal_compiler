@@ -71,12 +71,12 @@ int getToken() {
     } else return 0;
 }
 
-bool eat(int token) {
+bool eat(string token) {
     if (token == current_token) {
         current_token = getToken();
         return true;
     } else {
-        cout << "eat error. reading '" << tn[current_token] << "'. expecting '" << tn[token] << "'.\n";
+        cout << "eat error. reading '" << current_token << "'. expecting '" << token << "'.\n";
         getToken();
         return false;
     }
@@ -436,21 +436,19 @@ void FATOR() {
         }
 }
 
-int main () {
-    file.open("outputlexic.txt", fstream::in);
-    output.open("outputsyntax.txt", fstream::out);
-    if (!file.is_open()) {
-        cout << "file not open (entrada)";
-        return 0;
+int main (int argc, char **argv) {
+    if (argc != 3) {
+        cerr << "Uso: Sintático [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
+        return(1);
     }
-    if (!output.is_open()) {
-        cout << "file not open (saida)";
-        return 0;
-    }
+    fstream file;
+    fstream output;
+    file.open(argv[1], fstream::in);
+    output.open(argv[2], fstream::out);
+
     getToken();
     PROGRAMA();
 
     file.close();
     output.close();
-    return 1;
 }

@@ -152,6 +152,7 @@ string printToken(int token, string value, string value1){
     symbols.push_back("var");
     symbols.push_back("procedure");
     symbols.push_back("function");
+    symbols.push_back("integer");
     symbols.push_back("begin");
     symbols.push_back("end");
     symbols.push_back("if");
@@ -189,6 +190,8 @@ string printToken(int token, string value, string value1){
                     return "BEGIN";
                 else if(value1 == "end" || value1 == "END")
                     return "END";
+                else if(value1 == "integer" || value1 == "INTEGER")
+                    return "IDENTIFIER";
                 else if(value1 == "if" || value1 == "IF")
                     return "IF";
                 else if(value1 == "then"|| value1 == "THEN")
