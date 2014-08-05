@@ -4,45 +4,45 @@
 #include <vector>
 using namespace std;
 
-#define PROGRAM "PROGRAM"
-#define LABEL "LABEL"
-#define TYPE "TYPE"
-#define ARRAY "ARRAY"
-#define OF "OF"
-#define VAR "VAR"
-#define PROCEDURE "PROCEDURE"
-#define FUNCTION "FUNCTION"
-#define BEGIN "BEGIN"
-#define END "END"
-#define IF "IF"
-#define THEN "THEN"
-#define ELSE "ELSE"
-#define WHILE "WHILE"
-#define DO "DO"
-#define OR "OR"
-#define AND "AND"
-#define DIV "DIV"
-#define NOT "NOT"
-#define IDENTIFIER "IDENTIFIER"
-#define NUMBER "NUMBER"
-#define APARENTESES "("
-#define FPARENTESES ")"
-#define PONTOVIRGULA ";"
-#define DOISPONTOS ":"
-#define MAIS "+"
-#define MENOS "-"
-#define BARRA "/"
-#define ACOLCHETES "["
-#define FCOLCHETES "]"
-#define VIRGULA ","
-#define MAIOR ">"
-#define MENOR "<"
-#define ASTERISCO "*"
-#define IGUAL "="
-#define MAIORIGUAL ">="
-#define MENORIGUAL "<="
-#define ATRIBUICAO ":="
-#define MENORMAIOR "<>"
+#define PROGRAM 1
+#define LABEL 2
+#define TYPE 3
+#define ARRAY 4
+#define OF 5
+#define VAR 6
+#define PROCEDURE 7
+#define FUNCTION 8
+#define BEGIN 9
+#define END 10
+#define IF 11
+#define THEN 12
+#define ELSE 13
+#define WHILE 14
+#define DO 15
+#define OR 16
+#define AND 17
+#define DIV 18
+#define NOT 19
+#define IDENTIFIER 20
+#define NUMBER 21
+#define APARENTESES 22
+#define FPARENTESES 23
+#define PONTOVIRGULA 24
+#define DOISPONTOS 25
+#define MAIS 26
+#define MENOS 27
+#define BARRA 28
+#define ACOLCHETES 29
+#define FCOLCHETES 30
+#define VIRGULA 31
+#define MAIOR 32
+#define MENOR 33
+#define ASTERISCO 34
+#define IGUAL 35
+#define MAIORIGUAL 36
+#define MENORIGUAL 37
+#define ATRIBUICAO 38
+#define MENORMAIOR 39
 
 // static const int program = 1, label = 2, type = 3, var = 4, procedure = 5, _function = 6, _begin = 7;
 // static const int _while = 8, _not = 9;
@@ -52,11 +52,10 @@ using namespace std;
 // static const int identifier = 25, number = 26, array = 27, _procedure = 28, _if = 29, _then = 30;
 // static const int _end = 31, OF = 32, attrib = 33, _do = 34, _lesserGREATER = 35, _lesser = 36, _lessEQUAL = 37;
 // static const int _greatEQUAL = 38, _greater = 39, _plus = 40, _minus = 41, _or = 42;
-static const string tn[] = {"zero", "program", "label", "type", "var", "procedure", "function", "begin", "while", "not",
-                            "(", ")", ";", ".", ",", "=", ":", "[", "]", "..",
-                            "else", "div", "and", "*", "goto", "identifier", "number", "array", "procedure", "if",
-                            "then", "end", "of", ":=", "do", "<>", "<", "<=",
-                            ">=", ">", "+", "-", "or"};
+string PrintToken[] = {"PROGRAM", "LABEL", "TYPE", "ARRAY", "OF", "VAR", "PROCEDURE", "FUNCTION", "BEGIN","END", "IF", "THEN", "ELSE",
+"WHILE", "DO", "OR", "AND", "DIV", "NOT", "IDENTIFIER", "NUMVER", "(", ")", ";", ":", "+", "-", "/", "[", "]", ",",
+">", "<", "*", "=", ">=", "<=", ":=", "<>"};
+
 
 int current_token;
 fstream file;
@@ -71,12 +70,12 @@ int getToken() {
     } else return 0;
 }
 
-bool eat(string token) {
+bool eat(int token) {
     if (token == current_token) {
         current_token = getToken();
         return true;
     } else {
-        cout << "eat error. reading '" << current_token << "'. expecting '" << token << "'.\n";
+        cout << "eat error. reading '" << PrintToken[current_token] << "'. expecting '" << PrintToken[token] << "'.\n";
         getToken();
         return false;
     }
@@ -117,12 +116,12 @@ void BLOCO() {
 
     if (current_token == TYPE) {
         eat(TYPE);
-        do {
+        while(current_token == IDENTIFIER){
             eat(IDENTIFIER);
             eat(IGUAL);
             TIPO();
             eat(PONTOVIRGULA);
-        } while(current_token == IDENTIFIER);
+        }
     }
 
     if (current_token == VAR) {
@@ -159,9 +158,9 @@ void BLOCO() {
                 eat(IDENTIFIER);
             }
 
-            eat(SEMICOLON);
+            eat(PONTOVIRGULA);
             BLOCO();
-            eat(SEMICOLON);
+            eat(PONTOVIRGULA);
         }
     }
 
@@ -181,46 +180,8 @@ void TIPO() {
 }
 
 void PARAM_FORMAIS() {
-    switch (current_token) {
-            case VAR:
-                eat(VAR);
-                eat(IDENTIFIER);
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
-                eat(DOISPONTOS);
-                eat(IDENTIFIER);
-                break;
-            case IDENTIFIER:
-                eat(IDENTIFIER);
-                while (current_token == VIRGULA ) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
-                eat(DOISPONTOS);
-                eat(IDENTIFIER);
-                break;
-            case FUNCTION:
-                eat(FUNCTION);
-                eat(IDENTIFIER);
-                while (current_token == VIRGULA ) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
-                eat(DOISPONTOS);
-                eat(IDENTIFIER);
-                break;
-            case PROCEDURE:
-                eat(PROCEDURE);
-                eat(IDENTIFIER);
-                while (current_token == VIRGULA ) {
-                    eat(VIRGULA);
-                    eat(IDENTIFIER);
-                }
-                break;
-        }
-    while(current_token == PONTOVIRGULA){
+    eat(APARENTESES);
+    do{
         switch (current_token) {
             case VAR:
                 eat(VAR);
@@ -259,9 +220,16 @@ void PARAM_FORMAIS() {
                     eat(IDENTIFIER);
                 }
                 break;
-        }
-    }
-    eat(FPARENTESES);;
+            default:
+                cout << "expected 'program...'\n";
+            }
+
+            if(current_token == VIRGULA)
+                eat(VIRGULA);
+
+        } while(current_token == VAR || current_token == IDENTIFIER || current_token == FUNCTION || current_token == PROCEDURE);
+
+    eat(FPARENTESES);
 }
 
 void COMANDO () {
@@ -359,10 +327,10 @@ void EXPRESSAO() {
 }
 
 void EXP_SIMPLES() {
-    if (current_token == PLUS)
-        eat(PLUS);
-    else if(current_token == MINUS)
-        eat(MINUS);
+    if (current_token == MAIS)
+        eat(MAIS);
+    else if(current_token == MENOS)
+        eat(MENOS);
     TERMO();
     while (current_token == MAIS || current_token == MENOS || current_token == OR) {
         switch (current_token) {
@@ -436,19 +404,21 @@ void FATOR() {
         }
 }
 
-int main (int argc, char **argv) {
-    if (argc != 3) {
-        cerr << "Uso: Sintático [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
-        return(1);
+int main () {
+    file.open("outputlexic.txt", fstream::in);
+    output.open("outputsyntax.txt", fstream::out);
+    if (!file.is_open()) {
+        cout << "file not open (entrada)";
+        return 0;
     }
-    fstream file;
-    fstream output;
-    file.open(argv[1], fstream::in);
-    output.open(argv[2], fstream::out);
-
+    if (!output.is_open()) {
+        cout << "file not open (saida)";
+        return 0;
+    }
     getToken();
     PROGRAMA();
 
     file.close();
     output.close();
+    return 1;
 }
