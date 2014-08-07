@@ -6,9 +6,18 @@
 // #include <cstdlib>
 using namespace std;
 
+
+// retorna o número correspondente ao caractere
 int getSymbol(char c);
+
+// checa se é estado final
 bool isFinalState(int num);
+
+// retorna o valor numérico do token
 int printToken(int token, string value, string value1);
+
+// retorna uma lista de palavras reservadas
+vector<string> reservedWord();
 
 int matrix[15][20] = {
     //-   +   =   /   ;   ,   {   }   *  (   )   :  <  > 0-9 a-z err ' '  \n
@@ -30,11 +39,13 @@ int matrix[15][20] = {
 };
 
 int main(int argc, char **argv) {
+    // checa se há a quantia correta de argumentos
     if (argc != 3) {
         cerr << "Uso: lexico [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
         return(1);
     }
 
+    // inicialiaza as variáveis necessárias
     int lastState = 0, currentState = 1, column = 0, line = 1;
     int symbol = -1, previousSymbol = -1;
     bool readingComments = false, error = false;
@@ -143,84 +154,89 @@ bool isFinalState(int num) {
     else return false;
 }
 
+vector<string> reservedWords() {
+    vector<string> reserved;
+    reserved.push_back("program");
+    reserved.push_back("label");
+    reserved.push_back("type");
+    reserved.push_back("array");
+    reserved.push_back("of");
+    reserved.push_back("var");
+    reserved.push_back("procedure");
+    reserved.push_back("function");
+    reserved.push_back("integer");
+    reserved.push_back("begin");
+    reserved.push_back("end");
+    reserved.push_back("if");
+    reserved.push_back("then");
+    reserved.push_back("else");
+    reserved.push_back("while");
+    reserved.push_back("do");
+    reserved.push_back("or");
+    reserved.push_back("and");
+    reserved.push_back("div");
+    reserved.push_back("not");
+
+    return reserved;
+}
+
 int printToken(int token, string value, string value1){
-    vector<string> symbols;
-    symbols.push_back("program");
-    symbols.push_back("label");
-    symbols.push_back("type");
-    symbols.push_back("array");
-    symbols.push_back("of");
-    symbols.push_back("var");
-    symbols.push_back("procedure");
-    symbols.push_back("function");
-    symbols.push_back("integer");
-    symbols.push_back("begin");
-    symbols.push_back("end");
-    symbols.push_back("if");
-    symbols.push_back("then");
-    symbols.push_back("else");
-    symbols.push_back("while");
-    symbols.push_back("do");
-    symbols.push_back("or");
-    symbols.push_back("and");
-    symbols.push_back("div");
-    symbols.push_back("not");
+    vector<string> symbols = reservedWords();
 
     switch (token) {
         case 2:
-        for (std::vector<string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
-            if ((*it).compare(value) == 0)
-            {
-                if(value1 == "program" || value1 == "PROGRAM")
-                    return 1;
-                else if(value1 == "label" || value1 == "LABEL")
-                    return 2;
-                else if(value1 == "type" || value1 == "TYPE")
-                    return 3;
-                else if(value1 == "array" || value1 == "ARRAY")
-                    return 4;
-                else if(value1 == "of" || value1 == "OF")
-                    return 5;
-                else if(value1 == "var" || value1 == "VAR")
-                    return 6;
-                else if(value1 == "procedure" || value1 == "PROCEDURE")
-                    return 7;
-                else if(value1 == "function" || value1 == "FUNCTION")
-                    return 8;
-                else if(value1 == "begin" || value1 == "BEGIN")
-                    return 9;
-                else if(value1 == "end" || value1 == "END")
-                    return 10;
-                else if(value1 == "integer" || value1 == "INTEGER")
-                    return 20;
-                else if(value1 == "if" || value1 == "IF")
-                    return 11;
-                else if(value1 == "then"|| value1 == "THEN")
-                    return 12;
-                else if(value1 == "else" || value1 == "ELSE")
-                    return 13;
-                else if(value1 == "while" || value1 == "WHILE")
-                    return 14;
-                else if(value1 == "do" || value1 == "DO")
-                    return 15;
-                else if(value1 == "or" || value1 == "OR")
-                    return 16;
-                else if(value1 == "and" || value1 == "AND")
-                    return 17;
-                else if(value1 == "div" || value1 == "DIV")
-                    return 18;
-                else if(value1 == "not" || value1 == "NOT")
-                    return 19;
-                else
-                    return -1;
+            for (std::vector<string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
+                if ((*it).compare(value) == 0) {
+                    if(value1 == "program" || value1 == "PROGRAM")
+                        return 1;
+                    else if(value1 == "label" || value1 == "LABEL")
+                        return 2;
+                    else if(value1 == "type" || value1 == "TYPE")
+                        return 3;
+                    else if(value1 == "array" || value1 == "ARRAY")
+                        return 4;
+                    else if(value1 == "of" || value1 == "OF")
+                        return 5;
+                    else if(value1 == "var" || value1 == "VAR")
+                        return 6;
+                    else if(value1 == "procedure" || value1 == "PROCEDURE")
+                        return 7;
+                    else if(value1 == "function" || value1 == "FUNCTION")
+                        return 8;
+                    else if(value1 == "begin" || value1 == "BEGIN")
+                        return 9;
+                    else if(value1 == "end" || value1 == "END")
+                        return 10;
+                    else if(value1 == "integer" || value1 == "INTEGER")
+                        return 20;
+                    else if(value1 == "if" || value1 == "IF")
+                        return 11;
+                    else if(value1 == "then"|| value1 == "THEN")
+                        return 12;
+                    else if(value1 == "else" || value1 == "ELSE")
+                        return 13;
+                    else if(value1 == "while" || value1 == "WHILE")
+                        return 14;
+                    else if(value1 == "do" || value1 == "DO")
+                        return 15;
+                    else if(value1 == "or" || value1 == "OR")
+                        return 16;
+                    else if(value1 == "and" || value1 == "AND")
+                        return 17;
+                    else if(value1 == "div" || value1 == "DIV")
+                        return 18;
+                    else if(value1 == "not" || value1 == "NOT")
+                        return 19;
+                    else
+                        return -1;
 
+                }
             }
-        }
-        return 20;
-        break;
+            return 20;
+            break;
         case 3:
-        return 21;
-        break;
+            return 21;
+            break;
         case 4:
         case 6:
         case 9:

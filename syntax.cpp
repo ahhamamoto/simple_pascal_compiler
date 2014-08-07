@@ -103,7 +103,7 @@ void BLOCO() {
         case LABEL:
             eat(LABEL);
             eat(NUMBER);
-            while(current_token == VIRGULA) {
+            while (current_token == VIRGULA) {
                 eat(VIRGULA);
                 eat(NUMBER);
             }
@@ -111,7 +111,7 @@ void BLOCO() {
             break;
         case TYPE:
             eat(TYPE);
-            while(current_token == IDENTIFIER) {
+            while (current_token == IDENTIFIER) {
                 eat(IDENTIFIER);
                 eat(IGUAL);
                 TIPO();
@@ -120,9 +120,9 @@ void BLOCO() {
             break;
         case VAR:
             eat(VAR);
-            while(current_token == IDENTIFIER) {
+            while (current_token == IDENTIFIER) {
                 eat(IDENTIFIER);
-                while(current_token == VIRGULA){
+                while (current_token == VIRGULA){
                     eat(VIRGULA);
                     eat(IDENTIFIER);
                 }
@@ -136,20 +136,18 @@ void BLOCO() {
             break;
     }
 
-    while(current_token == PROCEDURE || current_token == FUNCTION) {
-        if(current_token == PROCEDURE) {
+    while (current_token == PROCEDURE || current_token == FUNCTION) {
+        if (current_token == PROCEDURE) {
             eat(PROCEDURE);
             eat(IDENTIFIER);
             PARAM_FORMAIS();
-        }
-        else if(current_token == FUNCTION) {
+        } else if (current_token == FUNCTION) {
             eat(FUNCTION);
             eat(IDENTIFIER);
             PARAM_FORMAIS();
             eat(DOISPONTOS);
             eat(IDENTIFIER);
-        }
-        else
+        } else
             cout << "expected prgram BLOCO 2" << endl;
 
         eat(PONTOVIRGULA);
@@ -160,7 +158,7 @@ void BLOCO() {
     if(current_token == BEGIN) {
         eat(BEGIN);
         COMANDO();
-        while(current_token == PONTOVIRGULA) {
+        while (current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             COMANDO();
         }
@@ -174,14 +172,14 @@ void TIPO() {
 
 void PARAM_FORMAIS() {
     eat(APARENTESES);
-    while(current_token == VAR || current_token == IDENTIFIER || current_token == FUNCTION || current_token == PROCEDURE) {
-        switch(current_token) {
+    while (current_token == VAR || current_token == IDENTIFIER || current_token == FUNCTION || current_token == PROCEDURE) {
+        switch (current_token) {
             case VAR:
                 eat(VAR);
                 break;
             case IDENTIFIER:
                 eat(IDENTIFIER);
-                while(current_token == VIRGULA) {
+                while (current_token == VIRGULA) {
                     eat(VIRGULA);
                     eat(IDENTIFIER);
                 }
@@ -204,7 +202,7 @@ void PARAM_FORMAIS() {
                 cout << "FUDEUUUU";
                 break;
         }
-        if(current_token == PONTOVIRGULA)
+        if (current_token == PONTOVIRGULA)
             eat(PONTOVIRGULA);
     }
     eat(FPARENTESES);
@@ -222,17 +220,17 @@ void COM_SEM_ROTULO() {
     switch(current_token){
         case IDENTIFIER:
             eat(IDENTIFIER);
-            if(current_token == ATRIBUICAO) {
+            if (current_token == ATRIBUICAO) {
                 eat(ATRIBUICAO);
                 EXPRESSAO();
-            }else if(current_token == APARENTESES) {
+            } else if (current_token == APARENTESES) {
                 eat(APARENTESES);
-                if(current_token ==  FPARENTESES) {
+                if (current_token ==  FPARENTESES) {
                     eat(FPARENTESES);
                 }
                 else {
                     EXPRESSAO();
-                    while(current_token == VIRGULA) {
+                    while (current_token == VIRGULA) {
                         eat(VIRGULA);
                         EXPRESSAO();
                     }
@@ -243,7 +241,7 @@ void COM_SEM_ROTULO() {
         case BEGIN:
             eat(BEGIN);
             COM_SEM_ROTULO();
-            while(current_token == PONTOVIRGULA) {
+            while (current_token == PONTOVIRGULA) {
                 eat(PONTOVIRGULA);
                 COM_SEM_ROTULO();
             }
@@ -254,7 +252,7 @@ void COM_SEM_ROTULO() {
             EXPRESSAO();
             eat(THEN);
             COM_SEM_ROTULO();
-            if(current_token == ELSE) {
+            if (current_token == ELSE) {
                 eat(ELSE);
                 COM_SEM_ROTULO();
             }
@@ -348,20 +346,18 @@ void FATOR() {
     switch (current_token) {
         case IDENTIFIER:
             eat(IDENTIFIER);
-            if(current_token == APARENTESES) {
+            if (current_token == APARENTESES) {
                 eat(APARENTESES);
-                if(current_token ==  FPARENTESES) {
+                if (current_token ==  FPARENTESES) {
                     eat(FPARENTESES);
-                }
-                else {
+                } else {
                     EXPRESSAO();
-                    while(current_token == VIRGULA) {
+                    while (current_token == VIRGULA) {
                         eat(VIRGULA);
                         EXPRESSAO();
                     }
                     eat(FPARENTESES);
                 }
-
             }
             break;
         case NUMBER:
@@ -394,6 +390,7 @@ int main (int argc, char **argv) {
         cout << "file not open (entrada)";
         return 0;
     }
+
     if (!output.is_open()) {
         cout << "file not open (saida)";
         return 0;
