@@ -74,12 +74,12 @@ int getToken() {
 }
 
 bool eat(int token) {
-    cout << "Eating: [" << PrintToken[current_token] << "] (" << current_token << ")" << endl;
+    cout << "Consumindo: [" << PrintToken[current_token] << "] (" << current_token << ")" << endl;
     if (token == current_token) {
         current_token = getToken();
         return true;
     } else {
-        cout << "eat error. reading '" << PrintToken[current_token] << "'. expecting '" << PrintToken[token] << "'.\n";
+        cout << "Erro: Consumindo=>[" << PrintToken[current_token] << "]  Esperado=>[" << PrintToken[token] << "] \n";
         getToken();
         return false;
     }
