@@ -160,12 +160,16 @@ void BLOCO() {
 
 void PARAMETROS_FORMAIS() {
     eat(APARENTESES);
-    SUB_PARAMETROS_FORMAIS();
-    while(current_token == PONTOVIRGULA) {
-        eat(PONTOVIRGULA);
+    if(current_token == FPARENTESES) {
+        eat(FPARENTESES);
+    }else {
         SUB_PARAMETROS_FORMAIS();
+        while(current_token == PONTOVIRGULA) {
+            eat(PONTOVIRGULA);
+            SUB_PARAMETROS_FORMAIS();
+        }
+        eat(FPARENTESES);
     }
-    eat(FPARENTESES);
 }
 
 void SUB_PARAMETROS_FORMAIS() {
@@ -199,7 +203,8 @@ void SUB_PARAMETROS_FORMAIS() {
         eat(PROCEDURE);
         eat(IDENTIFICADOR);
         PARAMETROS_FORMAIS();
-
+    }else {
+        eat(0);
     }
 }
 
@@ -209,18 +214,6 @@ void COMANDO() {
         eat(DOISPONTOS);
     }
     COMANDO_SEM_ROTULO();
-}
-
-void VARIAVEL() {
-    eat(IDENTIFICADOR);
-    while(current_token == ACOLCHETES) {
-        eat(ACOLCHETES);
-        EXPRESSAO();
-        while(current_token == VIRGULA) {
-            EXPRESSAO();
-        }
-        eat(FCOLCHETES);
-    }
 }
 
 void COMANDO_SEM_ROTULO() {
@@ -373,6 +366,9 @@ void FATOR() {
         FATOR();
     }else if(current_token == NUMERO) {
         eat(NUMERO);
+    }
+    else {
+        eat(0);
     }
 }
 
