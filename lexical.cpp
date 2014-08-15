@@ -4,10 +4,9 @@
 #include <map>
 using namespace std;
 
-// TODO
-// fazer a parte dos erros (contagem de linhas e colunas também)
-// fazer a parte dos comentarios
-// fazer o negocio do \n e \r
+// TODO escrever os valores dos tokens no arquivo de saida
+// TODO fazer a parte dos erros (contagem de linhas e colunas também)
+// TODO fazer o negocio do \n e \r
 
 // matriz de estados
 int state_matrix[17][22] = {
@@ -84,23 +83,31 @@ int main(int argc, char **argv) {
 
         // definir se está lendo comentarios
 
-        // define o ultimo estado final
         if (isFinalState(current_state)) {
             last_state = current_state;
+            if (last_state == 10) reading_comments = true;
         }
 
-        if (current_state == 0) {
-            token.pop_back();
-            input_file.unget();
-            if (last_state < 13) {
-                token_value = recognizeToken(last_state, token);
-                cout << "token[" << last_state << "]: " << token << "[" << token_value << "]" << endl;
-                // checar os erros
-            }
+        if (!reading_comments) {
+            if (current_state == 0) {
+                token.pop_back();
+                input_file.unget();
+                if (last_state < 13) {
+                    token_value = recognizeToken(last_state, token);
+                    cout << "token[" << last_state << "]: " << token << "[" << token_value << "]" << endl;
+                    // checar os erros
+                }
 
+                last_state = 0;
+                current_state = 1;
+                token.clear();
+            }
+        } else if (last_state == 12) {
+            reading_comments = false;
+            token.clear();
+        } else if (last_state != 11) {
             last_state = 0;
             current_state = 1;
-            token.clear();
         }
     }
 
