@@ -4,7 +4,6 @@
 #include <map>
 using namespace std;
 
-// TODO escrever os valores dos tokens no arquivo de saida
 // TODO fazer a parte dos erros (contagem de linhas e colunas também)
 // TODO fazer o negocio do \n e \r
 
@@ -94,7 +93,9 @@ int main(int argc, char **argv) {
                 input_file.unget();
                 if (last_state < 13) {
                     token_value = recognizeToken(last_state, token);
+                    output_file << token_value << " ";
                     cout << "token[" << last_state << "]: " << token << "[" << token_value << "]" << endl;
+                    if (token_value == 19) lines++;
                     // checar os erros
                 }
 
@@ -102,10 +103,11 @@ int main(int argc, char **argv) {
                 current_state = 1;
                 token.clear();
             }
-        } else if (last_state == 12) {
-            reading_comments = false;
-            token.clear();
-        } else if (last_state != 11) {
+        } else if (last_state == 12 || last_state != 11){
+            if (last_state == 12) {
+                reading_comments = false;
+                token.clear();
+            }
             last_state = 0;
             current_state = 1;
         }
@@ -189,9 +191,9 @@ int recognizeToken(int state, string token) {
         map<string,int>::iterator search = reserved_words.find(token);
         if (search != reserved_words.end()) return reserved_words[token];
         else return 36;
-    } else if (state == 3) {
+    } else if (state == 3 || state == 4 || state == 5 || state == 7 || state == 9) {
         return 37;
-    } else if (state == 6 or state == 8) {
+    } else if (state == 6 || state == 8) {
         return recognizeCompostSymbol(token);
     } else if (state == 9) {
         return recognizeSimpleSymbol(token);
