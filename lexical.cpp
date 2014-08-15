@@ -4,6 +4,11 @@
 #include <map>
 using namespace std;
 
+// TODO
+// fazer a parte dos erros (contagem de linhas e colunas também)
+// fazer a parte dos comentarios
+// fazer o negocio do \n e \r
+
 // matriz de estados
 int state_matrix[17][22] = {
     //   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20    21
@@ -30,14 +35,20 @@ int state_matrix[17][22] = {
 // retorna um vetor com as palavras reservadas
 map<string,int> reservedWords();
 
-// retorna o valor do caractere
+// retorna o valor do caractere para a matriz de transicao
 int getSymbolValue(char symbol);
 
 // retorna um valor booleano indicando se e estado final ou nao
 bool isFinalState(int state);
 
-// reconhece o token
+// reconhece o token e retorna o numero que o representa
 int recognizeToken(int state, string token);
+
+// retorna o valor do token dos caracteres como (, ), : e +
+int recognizeSimpleSymbol(string token);
+
+// retorna o valor do token dos strings <>, <=, :=
+int recognizeCompostSymbol(string token);
 
 /* start of main */
 int main(int argc, char **argv) {
@@ -71,21 +82,24 @@ int main(int argc, char **argv) {
 
         current_state = state_matrix[current_state][symbol];
 
+        // definir se está lendo comentarios
+
         // define o ultimo estado final
         if (isFinalState(current_state)) {
             last_state = current_state;
         }
 
         if (current_state == 0) {
-            input_file.unget();
             token.pop_back();
-            token_value = recognizeToken(last_state, token);
-
-            // checar os erros
+            input_file.unget();
+            if (last_state < 13) {
+                token_value = recognizeToken(last_state, token);
+                cout << "token[" << last_state << "]: " << token << "[" << token_value << "]" << endl;
+                // checar os erros
+            }
 
             last_state = 0;
             current_state = 1;
-            cout << "token: " << token << endl;
             token.clear();
         }
     }
@@ -154,7 +168,7 @@ int getSymbolValue(char symbol) {
 
 /*  start of isFinalState */
 bool isFinalState(int state) {
-    if (state >= 2 && state <= 20) return true;
+    if (state >= 2 && state <= 16) return true;
     else return false;
 }
 /* end of isFinalState */
@@ -164,12 +178,52 @@ int recognizeToken(int state, string token) {
     map<string,int> reserved_words = reservedWords();
     cout << state << endl;
 
-    switch (state) {
-        case 2:
-            map<string,int>::iterator search = reserved_words.find(token);
-            if (search != reserved_words.end()) return reserved_words[token];
+    if (state == 2) {
+        map<string,int>::iterator search = reserved_words.find(token);
+        if (search != reserved_words.end()) return reserved_words[token];
+        else return 36;
+    } else if (state == 3) {
+        return 37;
+    } else if (state == 6 or state == 8) {
+        return recognizeCompostSymbol(token);
+    } else if (state == 9) {
+        return recognizeSimpleSymbol(token);
     }
 
     return -1;
 }
 /* end of recoginzeToken */
+
+/* start of recognizeTokenChar */
+int recognizeSimpleSymbol(string token) {
+    map<string,int> charMap;
+    charMap[";"] = 18;
+    charMap["."] = 19;
+    charMap[","] = 20;
+    charMap[":"] = 21;
+    charMap["("] = 22;
+    charMap[")"] = 23;
+    charMap["="] = 24;
+    charMap["<"] = 25;
+    charMap[">"] = 26;
+    charMap["+"] = 27;
+    charMap["-"] = 28;
+    charMap["*"] = 29;
+    charMap["["] = 30;
+    charMap["]"] = 31;
+
+    return charMap[token];
+}
+/* end of recognizeTokenChar */
+
+/* start of recognizeCompostSymbol */
+int recognizeCompostSymbol(string token) {
+    map<string,int> charMap;
+    charMap[":="] = 32;
+    charMap["<>"] = 33;
+    charMap["<="] = 34;
+    charMap[">="] = 35;
+
+    return charMap[token];
+}
+/* end of recognizeCompostSymbol */
