@@ -93,19 +93,19 @@ void PROGRAMA() {
 }
 
 void BLOCO() {
-    if(current_token == LABEL) {
+    if (current_token == LABEL) {
         eat(LABEL);
         eat(NUMERO);
-        while(current_token == VIRGULA) {
+        while (current_token == VIRGULA) {
             eat(VIRGULA);
             eat(NUMERO);
         }
         eat(PONTOVIRGULA);
         BLOCO();
 
-    }else if(current_token == TYPE) {
+    } else if (current_token == TYPE) {
         eat(TYPE);
-        while(current_token == IDENTIFICADOR) {
+        while (current_token == IDENTIFICADOR) {
             eat(IDENTIFICADOR);
             eat(IGUAL);
             eat(IDENTIFICADOR);
@@ -113,11 +113,11 @@ void BLOCO() {
         }
         BLOCO();
 
-    }else if(current_token == VAR) {
+    } else if (current_token == VAR) {
         eat(VAR);
-        while(current_token == IDENTIFICADOR) {
+        while (current_token == IDENTIFICADOR) {
             eat(IDENTIFICADOR);
-            while(current_token == VIRGULA) {
+            while (current_token == VIRGULA) {
                 eat(VIRGULA);
                 eat(IDENTIFICADOR);
             }
@@ -127,7 +127,7 @@ void BLOCO() {
         }
         BLOCO();
 
-    }else if(current_token == PROCEDURE) {
+    } else if (current_token == PROCEDURE) {
         eat(PROCEDURE);
         eat(IDENTIFICADOR);
         PARAMETROS_FORMAIS();
@@ -136,7 +136,7 @@ void BLOCO() {
         eat(PONTOVIRGULA);
         BLOCO();
 
-    }else if(current_token == FUNCTION) {
+    } else if (current_token == FUNCTION) {
         eat(FUNCTION);
         eat(IDENTIFICADOR);
         PARAMETROS_FORMAIS();
@@ -146,11 +146,10 @@ void BLOCO() {
         BLOCO();
         eat(PONTOVIRGULA);
         BLOCO();
-
-    }else if(current_token == BEGIN) {
+    } else if (current_token == BEGIN) {
         eat(BEGIN);
         COMANDO();
-        while(current_token == PONTOVIRGULA) {
+        while (current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             COMANDO();
         }
@@ -160,11 +159,11 @@ void BLOCO() {
 
 void PARAMETROS_FORMAIS() {
     eat(APARENTESES);
-    if(current_token == FPARENTESES) {
+    if (current_token == FPARENTESES) {
         eat(FPARENTESES);
-    }else {
+    } else {
         SUB_PARAMETROS_FORMAIS();
-        while(current_token == PONTOVIRGULA) {
+        while (current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             SUB_PARAMETROS_FORMAIS();
         }
@@ -173,43 +172,43 @@ void PARAMETROS_FORMAIS() {
 }
 
 void SUB_PARAMETROS_FORMAIS() {
-    if(current_token == IDENTIFICADOR) {
+    if (current_token == IDENTIFICADOR) {
         eat(IDENTIFICADOR);
-        while(current_token == PONTOVIRGULA) {
+        while (current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             eat(IDENTIFICADOR);
         }
         eat(DOISPONTOS);
         eat(IDENTIFICADOR);
 
-    }else if(current_token == VAR) {
+    } else if (current_token == VAR) {
         eat(VAR);
         eat(IDENTIFICADOR);
-        while(current_token == PONTOVIRGULA) {
+        while (current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             eat(IDENTIFICADOR);
         }
         eat(DOISPONTOS);
         eat(IDENTIFICADOR);
 
-    }else if (current_token == FUNCTION) {
+    } else if (current_token == FUNCTION) {
         eat(FUNCTION);
         eat(IDENTIFICADOR);
         PARAMETROS_FORMAIS();
         eat(DOISPONTOS);
         eat(IDENTIFICADOR);
 
-    }else if (current_token == PROCEDURE) {
+    } else if (current_token == PROCEDURE) {
         eat(PROCEDURE);
         eat(IDENTIFICADOR);
         PARAMETROS_FORMAIS();
-    }else {
+    } else {
         eat(0);
     }
 }
 
 void COMANDO() {
-    if(current_token == NUMERO) {
+    if (current_token == NUMERO) {
         eat(NUMERO);
         eat(DOISPONTOS);
     }
@@ -217,29 +216,29 @@ void COMANDO() {
 }
 
 void COMANDO_SEM_ROTULO() {
-    if(current_token == IDENTIFICADOR) {
+    if (current_token == IDENTIFICADOR) {
         eat(IDENTIFICADOR);
-        if(current_token == DOISPONTOSIGUAL) {
+        if (current_token == DOISPONTOSIGUAL) {
             eat(DOISPONTOSIGUAL);
             EXPRESSAO();
 
-        }else if(current_token == APARENTESES) {
+        } else if (current_token == APARENTESES) {
             eat(APARENTESES);
-            if(current_token == FPARENTESES) {
-                eat(FPARENTESES);                
-            }else {
+            if (current_token == FPARENTESES) {
+                eat(FPARENTESES);
+            } else {
                 EXPRESSAO();
-                while(current_token == VIRGULA) {
+                while (current_token == VIRGULA) {
                     eat(VIRGULA);
                     EXPRESSAO();
                 }
             }
 
-        }else if(current_token == ACOLCHETES) {
-            while(current_token == ACOLCHETES) {
+        } else if (current_token == ACOLCHETES) {
+            while (current_token == ACOLCHETES) {
                 eat(ACOLCHETES);
                 EXPRESSAO();
-                while(current_token == VIRGULA) {
+                while (current_token == VIRGULA) {
                     eat(VIRGULA);
                     EXPRESSAO();
                 }
@@ -247,26 +246,26 @@ void COMANDO_SEM_ROTULO() {
             }
         }
 
-    }else if(current_token == BEGIN) {
+    } else if (current_token == BEGIN) {
         eat(BEGIN);
         COMANDO_SEM_ROTULO();
-        while(current_token == PONTOVIRGULA) {
+        while (current_token == PONTOVIRGULA) {
             eat(PONTOVIRGULA);
             COMANDO_SEM_ROTULO();
         }
         eat(END);
 
-    }else if(current_token == IF) {
+    } else if (current_token == IF) {
         eat(IF);
         EXPRESSAO();
         eat(THEN);
         COMANDO_SEM_ROTULO();
-        if(current_token == ELSE) {
+        if (current_token == ELSE) {
             eat(ELSE);
             COMANDO_SEM_ROTULO();
         }
 
-    }else if(current_token == WHILE) {
+    }else if (current_token == WHILE) {
         eat(WHILE);
         EXPRESSAO();
         eat(DO);
@@ -276,40 +275,40 @@ void COMANDO_SEM_ROTULO() {
 
 void EXPRESSAO() {
     EXPRESSAO_SIMPLES();
-    if(current_token == IGUAL) {
+    if (current_token == IGUAL) {
         eat(IGUAL);
         EXPRESSAO_SIMPLES();
-    }else if(current_token == MENORMAIOR) {
+    } else if (current_token == MENORMAIOR) {
         eat(MENORMAIOR);
         EXPRESSAO_SIMPLES();
-    }else if(current_token == MENOR) {
+    } else if (current_token == MENOR) {
         eat(MENOR);
         EXPRESSAO_SIMPLES();
-    }else if(current_token == MENORIGUAL) {
+    } else if (current_token == MENORIGUAL) {
         eat(MENORIGUAL);
         EXPRESSAO_SIMPLES();
-    }else if(current_token == MAIORIGUAL) {
+    } else if (current_token == MAIORIGUAL) {
         eat(MAIORIGUAL);
         EXPRESSAO_SIMPLES();
-    }else if(current_token == MAIOR) {
+    } else if (current_token == MAIOR) {
         eat(MAIOR);
         EXPRESSAO_SIMPLES();
     }
 }
 
 void EXPRESSAO_SIMPLES() {
-    if(current_token == MAIS) {
+    if (current_token == MAIS) {
         eat(MAIS);
-    }else if(current_token == MENOS) {
+    } else if (current_token == MENOS) {
         eat(MENOS);
     }
     TERMO();
-    while(current_token == MAIS || current_token == MENOS || current_token == OR) {
-        if(current_token == MAIS) {
+    while (current_token == MAIS || current_token == MENOS || current_token == OR) {
+        if (current_token == MAIS) {
             eat(MAIS);
-        }else if(current_token == MENOS) {
+        } else if (current_token == MENOS) {
             eat(MENOS);
-        }else if(current_token == OR){
+        } else if (current_token == OR){
             eat(OR);
         }
         TERMO();
@@ -318,12 +317,12 @@ void EXPRESSAO_SIMPLES() {
 
 void TERMO() {
     FATOR();
-    while(current_token == ASTERISCO || current_token == DIV || current_token == AND) {
-        if(current_token == ASTERISCO) {
+    while (current_token == ASTERISCO || current_token == DIV || current_token == AND) {
+        if (current_token == ASTERISCO) {
             eat(ASTERISCO);
-        }else if(current_token == DIV) {
+        } else if (current_token == DIV) {
             eat(DIV);
-        }else if(current_token == AND){
+        } else if (current_token == AND){
             eat(AND);
         }
         FATOR();
@@ -331,25 +330,25 @@ void TERMO() {
 }
 
 void FATOR() {
-    if(current_token == IDENTIFICADOR) {
+    if (current_token == IDENTIFICADOR) {
         eat(IDENTIFICADOR);
-        if(current_token == APARENTESES) {
+        if (current_token == APARENTESES) {
             eat(APARENTESES);
-            if(current_token == FPARENTESES) {
-                eat(FPARENTESES);                
-            }else {
+            if (current_token == FPARENTESES) {
+                eat(FPARENTESES);
+            } else {
                 EXPRESSAO();
-                while(current_token == VIRGULA) {
+                while (current_token == VIRGULA) {
                     eat(VIRGULA);
                     EXPRESSAO();
                 }
             }
 
-        }else if(current_token == ACOLCHETES) {
-            while(current_token == ACOLCHETES) {
+        } else if (current_token == ACOLCHETES) {
+            while (current_token == ACOLCHETES) {
                 eat(ACOLCHETES);
                 EXPRESSAO();
-                while(current_token == VIRGULA) {
+                while (current_token == VIRGULA) {
                     eat(VIRGULA);
                     EXPRESSAO();
                 }
@@ -357,23 +356,22 @@ void FATOR() {
             }
         }
 
-    }else if(current_token == APARENTESES) {
+    } else if (current_token == APARENTESES) {
         eat(APARENTESES);
         EXPRESSAO();
         eat(FPARENTESES);
-    }else if(current_token == NOT) {
+    } else if (current_token == NOT) {
         eat(NOT);
         FATOR();
-    }else if(current_token == NUMERO) {
+    } else if (current_token == NUMERO) {
         eat(NUMERO);
-    }
-    else {
+    } else {
         eat(0);
     }
 }
 
 int main(int argc, char **argv) {
-	if (argc != 3) {
+    if (argc != 3) {
         cerr << "Uso: Sintatico [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
         return(1);
     }
@@ -393,5 +391,5 @@ int main(int argc, char **argv) {
 
     PROGRAMA();
 
-    return 1;	
+    return 1;
 }
