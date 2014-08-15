@@ -4,17 +4,17 @@
 #include <map>
 using namespace std;
 
-// TODO fazer a parte dos erros (contagem de linhas e colunas também)
+// TODO erro na contagem de colunas quando tem espacos
 // TODO fazer o negocio do \n e \r
 
 // matriz de estados
-int state_matrix[17][22] = {
+int state_matrix[18][22] = {
     //   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20    21
     // a-z 0-9   )   ;   =   -   +   [   ]   .   ,   >   :   <   {   (   *   }  \r  \n  ' '\t resto
-    {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 0 erro
+    {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 0 final
     {    2,  3,  4,  4,  4,  4,  4,  4,  4,  4,  4,  5,  5,  7, 10,  9, 11, 12, 13, 15,  16,   0}, // estado 1 inicial
     {    2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 2 identificador
-    {    0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 3 numero
+    {   17,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 3 numero
     {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 4 simbolo simples[1]
     {    0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 5 simbolo simples[2]
     {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 6 simbolo composto[1]
@@ -27,7 +27,8 @@ int state_matrix[17][22] = {
     {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 14,   0,   0}, // estado 13 kreba linha
     {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 14 kreba linha
     {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 14,  0,   0,   0}, // estado 15 kreba linha
-    {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}  // estado 16 espaco e \t
+    {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}, // estado 16 espaco e \t
+    {    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,   0,   0}  // estado 17 erro
 };
 
 // retorna um vetor com as palavras reservadas
@@ -76,11 +77,11 @@ int main(int argc, char **argv) {
         symbol = getSymbolValue(next_char);
         token.push_back(next_char);
 
-        if (!error) columns++;
+        if (!error) {
+            columns++;
+        }
 
         current_state = state_matrix[current_state][symbol];
-
-        // definir se está lendo comentarios
 
         if (isFinalState(current_state)) {
             last_state = current_state;
@@ -91,19 +92,30 @@ int main(int argc, char **argv) {
             if (current_state == 0) {
                 token.pop_back();
                 input_file.unget();
+                // se nao for espaco ou quebra de linhas
                 if (last_state < 13) {
+                    columns--;
                     token_value = recognizeToken(last_state, token);
-                    output_file << token_value << " ";
                     cout << "token[" << last_state << "]: " << token << "[" << token_value << "]" << endl;
-                    if (token_value == 19) lines++;
+                    if (token_value == 19) {
+                        lines++;
+                        columns = 0;
+                    }
                     // checar os erros
+                    output_file << token_value << " ";
                 }
 
                 last_state = 0;
                 current_state = 1;
                 token.clear();
+            } else if (current_state == 17) {
+                error = true;
+                cout << "deu merda: " << token << endl;
+                cout << columns << " - " << token.size() << endl;
+                cout << "linha: " << lines << " coluna: " << columns - token.size() - 1 << endl;
+                return 1;
             }
-        } else if (last_state == 12 || last_state != 11){
+        } else if (last_state == 12 || last_state != 11) {
             if (last_state == 12) {
                 reading_comments = false;
                 token.clear();
