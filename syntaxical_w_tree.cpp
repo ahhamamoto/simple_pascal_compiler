@@ -172,7 +172,7 @@ void BLOCO() {
 
 void PARAMETROS_FORMAIS() {
     ASTNode *aux = parent_node;
-    ASTNode *tree = new ASTNode("PARAMATROS_FORMAIS()");
+    ASTNode *tree = new ASTNode("PARAMATROS-FORMAIS()");
     (*parent_node).push_child(tree);
     parent_node = tree;
 
@@ -192,7 +192,7 @@ void PARAMETROS_FORMAIS() {
 
 void SUB_PARAMETROS_FORMAIS() {
     ASTNode *aux = parent_node;
-    ASTNode *tree = new ASTNode("SUB_PARAMETROS_FOPRMAIS()");
+    ASTNode *tree = new ASTNode("SUB-PARAMETROS-FOPRMAIS()");
     (*parent_node).push_child(tree);
     parent_node = tree;
 
@@ -248,7 +248,7 @@ void COMANDO() {
 
 void COMANDO_SEM_ROTULO() {
     ASTNode *aux = parent_node;
-    ASTNode *tree = new ASTNode("COMANDO_SEM_ROTULO()");
+    ASTNode *tree = new ASTNode("COMANDO-SEM-ROTULO()");
     (*parent_node).push_child(tree);
     parent_node = tree;
 
@@ -341,7 +341,7 @@ void EXPRESSAO() {
 
 void EXPRESSAO_SIMPLES() {
     ASTNode *aux = parent_node;
-    ASTNode *tree = new ASTNode("EXPRESSAO_SIMPLES()");
+    ASTNode *tree = new ASTNode("EXPRESSAO-SIMPLES()");
     (*parent_node).push_child(tree);
     parent_node = tree;
 
@@ -432,16 +432,18 @@ void FATOR() {
 }
 
 int main(int argc, char **argv) {
-    /*if (argc != 3) {
+    if (argc != 3) {
         cerr << "Uso: Sintatico [Nome do Arquivo de Entrada] [Nome do Arquivo de Saida]" << endl;
         return(1);
     }
 
     input.open(argv[1], fstream::in);
     output.open(argv[2], fstream::out);
-    */
+
+    /*
     input.open("entrada_syntax.txt", fstream::in);
     output.open("saida_syntax.txt", fstream::out);
+    */
 
     if (!input.is_open()) {
         cout << "file not open (entrada)";
@@ -454,6 +456,7 @@ int main(int argc, char **argv) {
     }
 
     PROGRAMA();
-    (*parent_node).print();
+    output << (*parent_node).print();
+    cout << (*parent_node).print();
     return 1;
 }
