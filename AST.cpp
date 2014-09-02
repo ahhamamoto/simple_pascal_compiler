@@ -1,4 +1,5 @@
 #include <list>
+#include <string>
 using namespace std;
 
 class ASTNode {
@@ -13,24 +14,28 @@ class ASTNode {
     }
 
     ASTNode();
+
     ~ASTNode() {
-        for(list<ASTNode*>::iterator it = children.begin(); it != children.end(); it++) {
+        for (list<ASTNode*>::iterator it = children.begin(); it != children.end(); it++) {
             delete(*it);
         }
     }
+
     void push_child(string c_type) {
         ASTNode *a = new ASTNode(c_type);
         children.push_back(a);
     }
+
     void push_child(ASTNode* n_node) {
         children.push_back(n_node);
     }
 
-    void print() {
-        cout<<"["+type;
-        for(list<ASTNode*>::iterator it = children.begin(); it != children.end(); it++) {
-            (*(*it)).print();
+    string print() {
+        string return_string = "[" + type;
+        for (list<ASTNode*>::iterator it = children.begin(); it != children.end(); it++) {
+            return_string += (*(*it)).print();
         }
-        cout<<"]";
+        return_string.push_back(']');
+        return return_string;
     }
 };
