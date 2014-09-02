@@ -200,11 +200,11 @@ int recognizeToken(int state, string token) {
         map<string,int>::iterator search = reserved_words.find(token);
         if (search != reserved_words.end()) return reserved_words[token];
         else return 36;
-    } else if (state == 3 || state == 4 || state == 5 || state == 7 || state == 9) {
+    } else if (state == 3) {
         return 37;
     } else if (state == 6 || state == 8) {
         return recognizeCompostSymbol(token);
-    } else if (state == 9) {
+    } else if (state == 4 || state == 5 || state == 7 || state == 9) {
         return recognizeSimpleSymbol(token);
     }
 
