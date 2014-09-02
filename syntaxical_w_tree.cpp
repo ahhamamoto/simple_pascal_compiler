@@ -172,7 +172,7 @@ void BLOCO() {
 
 void PARAMETROS_FORMAIS() {
     ASTNode *aux = parent_node;
-    ASTNode *tree = new ASTNode("PARAMETROS_FORMAIS()");
+    ASTNode *tree = new ASTNode("PARAMATROS_FORMAIS()");
     (*parent_node).push_child(tree);
     parent_node = tree;
 
@@ -192,7 +192,7 @@ void PARAMETROS_FORMAIS() {
 
 void SUB_PARAMETROS_FORMAIS() {
     ASTNode *aux = parent_node;
-    ASTNode *tree = new ASTNode("SUB_PARAMETROS_FORMAIS()");
+    ASTNode *tree = new ASTNode("SUB_PARAMETROS_FOPRMAIS()");
     (*parent_node).push_child(tree);
     parent_node = tree;
 
