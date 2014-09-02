@@ -117,17 +117,17 @@ void BLOCO() {
 
     } else if (current_token == TYPE) {
         eat(TYPE);
-        while (current_token == IDENTIFICADOR) {
+        do {
             eat(IDENTIFICADOR);
             eat(IGUAL);
             eat(IDENTIFICADOR);
             eat(PONTOVIRGULA);
-        }
+        } while (current_token == IDENTIFICADOR);
         BLOCO();
 
     } else if (current_token == VAR) {
         eat(VAR);
-        while (current_token == IDENTIFICADOR) {
+        do {
             eat(IDENTIFICADOR);
             while (current_token == VIRGULA) {
                 eat(VIRGULA);
@@ -136,7 +136,7 @@ void BLOCO() {
             eat(DOISPONTOS);
             eat(IDENTIFICADOR);
             eat(PONTOVIRGULA);
-        }
+        } while(current_token == IDENTIFICADOR);
         BLOCO();
 
     } else if (current_token == PROCEDURE) {
@@ -198,8 +198,8 @@ void SUB_PARAMETROS_FORMAIS() {
 
     if (current_token == IDENTIFICADOR) {
         eat(IDENTIFICADOR);
-        while (current_token == PONTOVIRGULA) {
-            eat(PONTOVIRGULA);
+        while (current_token == VIRGULA) {
+            eat(VIRGULA);
             eat(IDENTIFICADOR);
         }
         eat(DOISPONTOS);
@@ -208,8 +208,8 @@ void SUB_PARAMETROS_FORMAIS() {
     } else if (current_token == VAR) {
         eat(VAR);
         eat(IDENTIFICADOR);
-        while (current_token == PONTOVIRGULA) {
-            eat(PONTOVIRGULA);
+        while (current_token == VIRGULA) {
+            eat(VIRGULA);
             eat(IDENTIFICADOR);
         }
         eat(DOISPONTOS);
@@ -226,8 +226,6 @@ void SUB_PARAMETROS_FORMAIS() {
         eat(PROCEDURE);
         eat(IDENTIFICADOR);
         PARAMETROS_FORMAIS();
-    } else {
-        eat(0);
     }
     parent_node = aux;
 }
@@ -425,8 +423,6 @@ void FATOR() {
         FATOR();
     } else if (current_token == NUMERO) {
         eat(NUMERO);
-    } else {
-        eat(0);
     }
     parent_node = aux;
 }
