@@ -135,26 +135,23 @@ int main(int argc, char **argv) {
 map<string,int> reservedWords() {
     // adiciona todas as palavras reservadas
     map<string,int> reserved;
-    reserved["program"] = 0;
-    reserved["label"] = 1;
-    reserved["type"] = 2;
-    reserved["array"] = 3;
-    reserved["of"] = 4;
-    reserved["var"] = 5;
-    reserved["procedure"] = 6;
-    reserved["function"] = 7;
-    reserved["integer"] = 8;
-    reserved["begin"] = 9;
-    reserved["end"] = 10;
-    reserved["if"] = 11;
-    reserved["then"] = 12;
-    reserved["else"] = 13;
-    reserved["while"] = 14;
-    reserved["do"];
-    reserved["or"] = 15;
+    reserved["program"] = 1;
+    reserved["label"] = 2;
+    reserved["type"] = 3;
+    reserved["var"] = 4;
+    reserved["procedure"] = 5;
+    reserved["function"] = 6;
+    reserved["begin"] = 7;
+    reserved["end"] = 8;
+    reserved["if"] = 9;
+    reserved["then"] = 10;
+    reserved["else"] = 11;
+    reserved["while"] = 12;
+    reserved["do"] = 13;
+    reserved["or"] = 14;
     reserved["and"] = 16;
-    reserved["div"] = 17;
-    reserved["not"] = 18;
+    reserved["div"] = 15;
+    reserved["not"] = 17;
 
     return reserved;
 }
