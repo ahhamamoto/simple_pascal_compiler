@@ -107,7 +107,59 @@ void BLOCO() {
     (*parent_node).push_child(tree);
     parent_node = tree;
 
-    SUB_BLOCO();
+    while(current_token == LABEL || current_token == TYPE || current_token == VAR || current_token == PROCEDURE || current_token == FUNCTION) {
+        switch (current_token) {
+            case LABEL:
+                eat(LABEL);
+                eat(NUMERO);
+                while(current_token == VIRGULA) {
+                    eat(VIRGULA);
+                    eat(NUMERO);
+                }
+                eat(PONTOVIRGULA);
+                break;
+            case TYPE:
+                eat(TYPE);
+                do {
+                    eat(IDENTIFICADOR);
+                    eat(IGUAL);
+                    eat(IDENTIFICADOR);
+                    eat(PONTOVIRGULA);
+                } while(current_token == IDENTIFICADOR);
+                break;
+            case VAR:
+                eat(VAR);
+                eat(IDENTIFICADOR);
+                while(current_token == VIRGULA) {
+                    eat(VIRGULA);
+                    eat(IDENTIFICADOR);
+                }
+                eat(DOISPONTOS);
+                eat(IDENTIFICADOR);
+                eat(PONTOVIRGULA);
+                break;
+            case PROCEDURE:
+                eat(PROCEDURE);
+                eat(IDENTIFICADOR);
+                PARAMETROS_FORMAIS();
+                eat(PONTOVIRGULA);
+                BLOCO();
+                eat(PONTOVIRGULA);
+                break;
+            case FUNCTION:
+                eat(FUNCTION);
+                eat(IDENTIFICADOR);
+                PARAMETROS_FORMAIS();
+                eat(DOISPONTOS);
+                eat(IDENTIFICADOR);
+                eat(PONTOVIRGULA);
+                BLOCO();
+                eat(PONTOVIRGULA);
+                break;
+            default:
+                break;
+        }        
+    }
     eat(BEGIN);
     COMANDO();
     while(current_token == PONTOVIRGULA) {
@@ -120,62 +172,7 @@ void BLOCO() {
 }
 
 void SUB_BLOCO() {
-    switch (current_token) {
-        case LABEL:
-            eat(LABEL);
-            eat(NUMERO);
-            while(current_token == VIRGULA) {
-                eat(VIRGULA);
-                eat(NUMERO);
-            }
-            eat(PONTOVIRGULA);
-            SUB_BLOCO();
-            break;
-        case TYPE:
-            eat(TYPE);
-            do {
-                eat(IDENTIFICADOR);
-                eat(IGUAL);
-                eat(IDENTIFICADOR);
-                eat(PONTOVIRGULA);
-            } while(current_token == IDENTIFICADOR);
-            SUB_BLOCO();
-            break;
-        case  VAR:
-            eat(VAR);
-            eat(IDENTIFICADOR);
-            while(current_token == VIRGULA) {
-                eat(VIRGULA);
-                eat(IDENTIFICADOR);
-            }
-            eat(DOISPONTOS);
-            eat(IDENTIFICADOR);
-            eat(PONTOVIRGULA);
-            SUB_BLOCO();
-            break;
-        case PROCEDURE:
-            eat(PROCEDURE);
-            eat(IDENTIFICADOR);
-            PARAMETROS_FORMAIS();
-            eat(PONTOVIRGULA);
-            BLOCO();
-            eat(PONTOVIRGULA);
-            SUB_BLOCO();
-            break;
-        case FUNCTION:
-            eat(FUNCTION);
-            eat(IDENTIFICADOR);
-            PARAMETROS_FORMAIS();
-            eat(DOISPONTOS);
-            eat(IDENTIFICADOR);
-            eat(PONTOVIRGULA);
-            BLOCO();
-            eat(PONTOVIRGULA);
-            SUB_BLOCO();
-            break;
-        default:
-            break;
-    }
+    
 
 }
 
