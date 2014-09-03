@@ -51,6 +51,7 @@ fstream output;
 
 void PROGRAMA();
 void BLOCO();
+void SUB_BLOCO();
 void PARAMETROS_FORMAIS();
 void SUB_PARAMETROS_FORMAIS();
 void COMANDO();
@@ -106,6 +107,19 @@ void BLOCO() {
     (*parent_node).push_child(tree);
     parent_node = tree;
 
+    SUB_BLOCO();
+    eat(BEGIN);
+    COMANDO();
+    while(current_token == PONTOVIRGULA) {
+        eat(PONTOVIRGULA);
+        COMANDO();
+    }
+    eat(END);
+
+    parent_node = aux;
+}
+
+void SUB_BLOCO() {
     switch (current_token) {
         case LABEL:
             eat(LABEL);
@@ -115,7 +129,8 @@ void BLOCO() {
                 eat(NUMERO);
             }
             eat(PONTOVIRGULA);
-            BLOCO();
+            SUB_BLOCO();
+            break;
         case TYPE:
             eat(TYPE);
             do {
@@ -124,7 +139,8 @@ void BLOCO() {
                 eat(IDENTIFICADOR);
                 eat(PONTOVIRGULA);
             } while(current_token == IDENTIFICADOR);
-            BLOCO();
+            SUB_BLOCO();
+            break;
         case  VAR:
             eat(VAR);
             eat(IDENTIFICADOR);
@@ -135,7 +151,8 @@ void BLOCO() {
             eat(DOISPONTOS);
             eat(IDENTIFICADOR);
             eat(PONTOVIRGULA);
-            BLOCO();
+            SUB_BLOCO();
+            break;
         case PROCEDURE:
             eat(PROCEDURE);
             eat(IDENTIFICADOR);
@@ -143,7 +160,8 @@ void BLOCO() {
             eat(PONTOVIRGULA);
             BLOCO();
             eat(PONTOVIRGULA);
-            BLOCO();
+            SUB_BLOCO();
+            break;
         case FUNCTION:
             eat(FUNCTION);
             eat(IDENTIFICADOR);
@@ -153,19 +171,12 @@ void BLOCO() {
             eat(PONTOVIRGULA);
             BLOCO();
             eat(PONTOVIRGULA);
-            BLOCO();
-        case BEGIN:
-            eat(BEGIN);
-            COMANDO();
-            while(current_token == PONTOVIRGULA) {
-                eat(PONTOVIRGULA);
-                COMANDO();
-            }
+            SUB_BLOCO();
+            break;
         default:
-            cout << "Erro de consumo na funcao BLOCO()";
+            break;
     }
 
-    parent_node = aux;
 }
 
 void PARAMETROS_FORMAIS() {
@@ -175,43 +186,52 @@ void PARAMETROS_FORMAIS() {
     parent_node = tree;
 
     eat(APARENTESES);
-    do{
-        switch (current_token) {
-            case VAR:
-                eat(VAR);
-                eat(IDENTIFICADOR);
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    eat(IDENTIFICADOR);
-                }
-                eat(DOISPONTOS);
-                eat(IDENTIFICADOR);
-            case IDENTIFICADOR:
-                eat(IDENTIFICADOR);
-                while(current_token == VIRGULA) {
-                    eat(VIRGULA);
-                    eat(IDENTIFICADOR);
-                }
-                eat(DOISPONTOS);
-                eat(IDENTIFICADOR);
-            case FUNCTION:
-                eat(FUNCTION);
-                eat(IDENTIFICADOR);
-                PARAMETROS_FORMAIS();
-                eat(DOISPONTOS);
-                eat(IDENTIFICADOR);
-            case PROCEDURE:
-                eat(PROCEDURE);
-                eat(IDENTIFICADOR);
-                PARAMETROS_FORMAIS();
-            default:
-                break;
-        }
-
-    } while(current_token == PONTOVIRGULA);
+    SUB_PARAMETROS_FORMAIS();
+    while(current_token == PONTOVIRGULA) {
+        eat(PONTOVIRGULA);
+        SUB_PARAMETROS_FORMAIS();
+    }  
     eat(FPARENTESES);
 
     parent_node = aux;
+}
+
+void SUB_PARAMETROS_FORMAIS() {
+    switch (current_token) {
+        case VAR:
+            eat(VAR);
+            eat(IDENTIFICADOR);
+            while(current_token == VIRGULA) {
+                eat(VIRGULA);
+                eat(IDENTIFICADOR);
+            }
+            eat(DOISPONTOS);
+            eat(IDENTIFICADOR);
+            break;
+        case IDENTIFICADOR:
+            eat(IDENTIFICADOR);
+            while(current_token == VIRGULA) {
+                eat(VIRGULA);
+                eat(IDENTIFICADOR);
+            }
+            eat(DOISPONTOS);
+            eat(IDENTIFICADOR);
+            break;
+        case FUNCTION:
+            eat(FUNCTION);
+            eat(IDENTIFICADOR);
+            PARAMETROS_FORMAIS();
+            eat(DOISPONTOS);
+            eat(IDENTIFICADOR);
+            break;
+        case PROCEDURE:
+            eat(PROCEDURE);
+            eat(IDENTIFICADOR);
+            PARAMETROS_FORMAIS();
+            break;
+        default:
+            break;
+    }
 }
 
 void COMANDO() {
@@ -254,6 +274,7 @@ void COMANDO_SEM_ROTULO() {
                 eat(DOISPONTOSIGUAL);
                 EXPRESSAO();
             }
+            break;
         case BEGIN:
             eat(BEGIN);
             COMANDO_SEM_ROTULO();
@@ -262,6 +283,7 @@ void COMANDO_SEM_ROTULO() {
                 COMANDO_SEM_ROTULO();
             }
             eat(END);
+            break;
         case IF:
             eat(IF);
             EXPRESSAO();
@@ -271,11 +293,13 @@ void COMANDO_SEM_ROTULO() {
                 eat(ELSE);
                 COMANDO_SEM_ROTULO();
             }
+            break;
         case WHILE:
             eat(WHILE);
             EXPRESSAO();
             eat(DO);
             COMANDO_SEM_ROTULO();
+            break;
         default:
             break;
 
@@ -295,21 +319,29 @@ void EXPRESSAO() {
         case IGUAL:
             eat(IGUAL);
             EXPRESSAO_SIMPLES();
+            break;
         case MENORMAIOR:
             eat(MENORMAIOR);
             EXPRESSAO_SIMPLES();
+            break;
         case MENOR:
             eat(MENOR);
             EXPRESSAO_SIMPLES();
+            break;
         case MENORIGUAL:
             eat(MENORIGUAL);
             EXPRESSAO_SIMPLES();
+            break;
         case MAIORIGUAL:
             eat(MAIORIGUAL);
             EXPRESSAO_SIMPLES();
+            break;
         case MAIOR:
             eat(MAIOR);
             EXPRESSAO_SIMPLES();
+            break;
+        default:
+            break;
     }
 
     parent_node = aux;
@@ -383,17 +415,21 @@ void FATOR() {
                     eat(FPARENTESES);
                 }
             }
+            break;
         case NUMERO:
             eat(NUMERO);
+            break;
         case NOT:
             eat(NOT);
             FATOR();
+            break;
         case APARENTESES:
             eat(APARENTESES);
             EXPRESSAO();
             eat(FPARENTESES);
+            break;
         default:
-            cout << "Erro de consumo na funcao FATOR()";
+            cout << "*****Erro de consumo na funcao FATOR()*****";
     }
 
     parent_node = aux;
