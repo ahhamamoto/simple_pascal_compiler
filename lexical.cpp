@@ -204,7 +204,7 @@ int recognizeToken(int state, string token) {
         return 37;
     } else if (state == 6 || state == 8) {
         return recognizeCompostSymbol(token);
-    } else if (state == 4 || state == 5 || state == 7 || state == 9) {
+    } else if (state == 4 || state == 5 || state == 7 || state == 9 || state == 11) {
         return recognizeSimpleSymbol(token);
     }
 

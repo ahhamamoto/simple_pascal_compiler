@@ -400,6 +400,7 @@ void FATOR() {
                     eat(VIRGULA);
                     EXPRESSAO();
                 }
+                eat(FPARENTESES);
             }
 
         } else if (current_token == ACOLCHETES) {
