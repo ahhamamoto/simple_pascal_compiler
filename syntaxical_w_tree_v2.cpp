@@ -88,6 +88,7 @@ void eat(int token) {
 }
 
 void PROGRAMA() {
+    cout << "PROGRAMA()" << endl;
     ASTNode *tree = new ASTNode("PROGRAMA()");
     parent_node = tree;
 
@@ -102,6 +103,7 @@ void PROGRAMA() {
 }
 
 void BLOCO() {
+    cout << "entrando BLOCO()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("BLOCO()");
     (*parent_node).push_child(tree);
@@ -158,7 +160,7 @@ void BLOCO() {
                 break;
             default:
                 break;
-        }        
+        }
     }
     eat(BEGIN);
     COMANDO();
@@ -169,14 +171,11 @@ void BLOCO() {
     eat(END);
 
     parent_node = aux;
-}
-
-void SUB_BLOCO() {
-    
-
+    cout << "saindo BLOCO()" << endl;
 }
 
 void PARAMETROS_FORMAIS() {
+    cout << "entrando PARAMETROS_FORMAIS()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("PARAMATROS-FORMAIS()");
     (*parent_node).push_child(tree);
@@ -187,13 +186,15 @@ void PARAMETROS_FORMAIS() {
     while(current_token == PONTOVIRGULA) {
         eat(PONTOVIRGULA);
         SUB_PARAMETROS_FORMAIS();
-    }  
+    }
     eat(FPARENTESES);
 
     parent_node = aux;
+    cout << "saindo PARAMETROS_FORMAIS()" << endl;
 }
 
 void SUB_PARAMETROS_FORMAIS() {
+    cout << "entrando SUB_PARAMETROS_FORMAIS" << endl;
     switch (current_token) {
         case VAR:
             eat(VAR);
@@ -229,9 +230,11 @@ void SUB_PARAMETROS_FORMAIS() {
         default:
             break;
     }
+    cout << "saindo SUB_PARAMETROS_FORMAIS" << endl;
 }
 
 void COMANDO() {
+    cout << "entrando COMANDO()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("COMANDO()");
     (*parent_node).push_child(tree);
@@ -244,9 +247,11 @@ void COMANDO() {
     COMANDO_SEM_ROTULO();
 
     parent_node = aux;
+    cout << "saindo COMANDO()" << endl;
 }
 
 void COMANDO_SEM_ROTULO() {
+    cout << "entrando COMANDO_SEM_ROTULO()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("COMANDO-SEM-ROTULO()");
     (*parent_node).push_child(tree);
@@ -303,9 +308,11 @@ void COMANDO_SEM_ROTULO() {
     }
 
     parent_node = aux;
+    cout << "saindo COMANDO_SEM_ROTULO()" << endl;
 }
 
 void EXPRESSAO() {
+    cout << "entrando EXPRESSAO()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("EXPRESSAO()");
     (*parent_node).push_child(tree);
@@ -342,9 +349,11 @@ void EXPRESSAO() {
     }
 
     parent_node = aux;
+    cout << "saindo EXPRESSAO()" << endl;
 }
 
 void EXPRESSAO_SIMPLES() {
+    cout << "entrando EXPRESSAO_SIMPLES()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("EXPRESSAO-SIMPLES()");
     (*parent_node).push_child(tree);
@@ -367,9 +376,11 @@ void EXPRESSAO_SIMPLES() {
         TERMO();
     }
     parent_node = aux;
+    cout << "saindo EXPRESSAO_SIMPLES()" << endl;
 }
 
 void TERMO() {
+    cout << "entrando TERMO()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("TERMO()");
     (*parent_node).push_child(tree);
@@ -387,9 +398,11 @@ void TERMO() {
         FATOR();
     }
     parent_node = aux;
+    cout << "saindo TERMO()" << endl;
 }
 
 void FATOR() {
+    cout << "entrando FATOR()" << endl;
     ASTNode *aux = parent_node;
     ASTNode *tree = new ASTNode("FATOR()");
     (*parent_node).push_child(tree);
@@ -430,6 +443,7 @@ void FATOR() {
     }
 
     parent_node = aux;
+    cout << "saindo FATOR()" << endl;
 }
 
 int main(int argc, char **argv) {
@@ -458,6 +472,6 @@ int main(int argc, char **argv) {
 
     PROGRAMA();
     output << (*parent_node).print();
-    cout << (*parent_node).print();
+    // cout << (*parent_node).print();
     return 1;
 }
